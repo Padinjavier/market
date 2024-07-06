@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notificación de Vencimiento de Productos</title>
+<style type="text/css">
+    body { font-family: Arial, sans-serif; }
+    .alerta-amarilla { background-color: #fff3cd; }
+    .alerta-naranja { background-color: #ffe5b4; }
+    .alerta-roja { background-color: #f8d7da; }
+    .alerta-emergencia { background-color: #d9534f; color: white; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background-color: #f2f2f2; text-align: left; }
+    .dias-para-vencer { font-weight: bold; }
+</style>
+</head>
+<body>
+    <h2>Notificación de Vencimiento de Productos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Código</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Stock</th>
+                <th>Días para Vencer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Ejemplo de producto con 21 días para vencer -->
+            <tr class="alerta-amarilla">
+                <td>Jugo de Naranja</td>
+                <td>Bebidas</td>
+                <td>$1.50</td>
+                <td>12345</td>
+                <td>2024-01-11</td>
+                <td>30</td>
+                <td class="dias-para-vencer">21 días</td>
+            </tr>
+            <!-- Ejemplo de producto con 14 días para vencer -->
+            <tr class="alerta-naranja">
+                <td>Galletas de Chocolate</td>
+                <td>Snacks</td>
+                <td>$2.00</td>
+                <td>67890</td>
+                <td>2024-01-18</td>
+                <td>50</td>
+                <td class="dias-para-vencer">14 días</td>
+            </tr>
+            <!-- Ejemplo de producto con 7 días para vencer -->
+            <tr class="alerta-roja">
+                <td>Yogurt Natural</td>
+                <td>Lácteos</td>
+                <td>$0.99</td>
+                <td>24680</td>
+                <td>2024-01-25</td>
+                <td>20</td>
+                <td class="dias-para-vencer">7 días</td>
+            </tr>
+            <!-- Ejemplo de producto vencido -->
+            <tr class="alerta-emergencia">
+                <td>Queso Fresco</td>
+                <td>Lácteos</td>
+                <td>$3.50</td>
+                <td>13579</td>
+                <td>2023-12-31</td>
+                <td>5</td>
+                <td class="dias-para-vencer">7 días</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
