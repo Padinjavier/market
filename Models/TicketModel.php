@@ -11,8 +11,8 @@ class TicketModel extends Mysql
     {
         $sql = "SELECT v.codigo_venta AS venta_codigo,
                         v.idvendedor AS caja_numero,
-                        p.nombres AS usuario_nombre, 
-                        p.apellidos AS usuario_apellido,
+                        LEFT(p.nombres, 1) AS usuario_nombre,
+                        CONCAT(LEFT(SUBSTRING_INDEX(p.apellidos, ' ', 1), 3), '*****') AS usuario_apellido,
                         p_cliente.idpersona AS cliente_id, 
                         v.dni_cliente AS cliente_numero_documento, 
                         p_cliente.nombres AS cliente_nombre, 
@@ -28,8 +28,7 @@ class TicketModel extends Mysql
                         dv.cantidad, 
                         dv.precio, 
                         dv.descuento,
-                        DATE_FORMAT(v.datecreated, '%Y-%m-%d') AS venta_fecha,
-                        DATE_FORMAT(v.datecreated, '%H:%i:%s') AS venta_hora
+                        DATE_FORMAT(v.datecreated, '%d-%m-%Y | %h:%i:%s %p') as venta_fecha_hora
                     FROM 
                         venta v
                     LEFT JOIN 
@@ -51,10 +50,11 @@ class TicketModel extends Mysql
     public function seleccionarDetalleDatos($venta_codigo)
     {
         $sql = "SELECT dv.iddetalleventa AS venta_detalle_id,
-                   s.nombre AS venta_detalle_descripcion,
-                   dv.cantidad AS venta_detalle_cantidad,
-                   dv.precio AS venta_detalle_precio_venta,
-                   (dv.cantidad * dv.precio) AS venta_detalle_total
+                   s.nombre AS venta_nombre_servicio,
+                   dv.cantidad AS detalle_venta_cantidad,
+                   dv.precio AS detalle_venta_precio_uni,
+                   dv.descuento AS detalle_venta_descuento,
+                   (dv.cantidad * dv.precio) AS detalle_venta_precio_total
             FROM detalle_venta dv
             LEFT JOIN servicio s ON dv.idservicio = s.idservicio
             WHERE dv.codigo_venta = '$venta_codigo'";

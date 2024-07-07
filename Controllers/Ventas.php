@@ -164,20 +164,12 @@ class Ventas extends Controllers{
 					$btnView = '<button class="btn btn-info btn-sm btnView btnViewEmpleado" onClick="fntViewVenta('.$arrData[$i]['idventa'].')" title="Ver Venta"><i class="far fa-eye"></i></button>';
 					// $btnViewTrans = '<a title="Ver Transacción" href="'.base_url().'/ventas/transaccion/'.$arrData[$i]['idventa'].'" target="_blanck" class="btn btn-info btn-sm"> <i class="fa fa-paypal" aria-hidden="true"></i> </a> '; // Se usa la clave 'transaccion'
 					// $btnViewdetalle = ' <a title="Ver Detalle" href="'.base_url().'/ventas/orden/'.$arrData[$i]['idventa'].'" target="_blanck" class="btn btn-info btn-sm"> <i class="far fa-eye"></i> </a>';
+					
 					$btnPdf = '<a  class="btn btn-secondary btn-sm  btnViewEmpleado" href="'.base_url().'/factura/generarFactura/'.$arrData[$i]['idventa'].'" target="_blanck"  title="Ver PDF Venta"><i class="bi bi-filetype-pdf"></i></a> ';
-					// $btntiket = '<a  class="btn btn-success btn-sm  btnViewEmpleado" href="'.base_url().'/factura/generarFactura/'.$arrData[$i]['idventa'].'" target="_blanck"  title="Imprimir tiket Venta"><i class="bi bi-printer"></i></a> ';
-					// $btntiket2 = '<button type="button" class="button is-link is-light" 
-					// 				onclick="print_ticket('.base_url()."/Ticket.php?code=".$arrData[$i]['idventa'].')" >
-                    //             		<i class="bi bi-printer"></i> &nbsp;
-                    //             		Imprimir ticket de venta
-                    //         </buttona>';
-					$btntiket2 = '<button type="button" class="button is-link is-light" 
-										onclick="print_ticket(\''.base_url().'/Ticket/getVenta/'.$arrData[$i]['codigo_venta'].'\')">
-										<i class="bi bi-printer"></i> &nbsp;
-										Imprimir ticket de venta
-									</button>';
-
-
+					$btntiket = '<button class="btn btn-success btn-sm  btnViewEmpleado"  
+										onclick="print_ticket(\''.base_url().'/Ticket/getVenta/'.$arrData[$i]['codigo_venta'].'\')" target="_blanck" title="Imprimir ticket Venta">
+										<i class="bi bi-printer"></i>
+								</button> ';
 				}
 				if($_SESSION['permisosMod']['u']){
 					$btnEdit = '<button class="btn btn-primary  btn-sm btnEdit btnEditInfo" onClick="fntEditInfo(this,'.$arrData[$i]['idventa'].')" title="Editar Venta"><i class="fas fa-pencil-alt"></i></button>';
@@ -187,7 +179,7 @@ class Ventas extends Controllers{
 						$btnDelete = '<button class="btn btn-danger btn-sm btnDel btnDelEmpleado" onClick="fntDelEmpleado('.$arrData[$i]['idventa'].')" title="Eliminar Venta"><i class="far fa-trash-alt"></i></button>';
 				}
 				$arrData[$i]['options'] = '<div class="text-center" style="display:flex; flex-direction:row; justify-content:space-evenly; gap:10px;">
-				'.$btnView.''.$btnEdit.''.$btnDelete.''.$btnPdf.''.$btntiket.''.''.$btntiket2.''.$btnViewTrans.''.$btnViewdetalle.'</div>';
+				'.$btnView.''.$btnEdit.''.$btnDelete.''.$btnPdf.''.$btntiket.''.$btntiket2.''.$btnViewTrans.''.$btnViewdetalle.'</div>';
 			
 
 			}
