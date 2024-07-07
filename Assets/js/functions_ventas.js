@@ -385,9 +385,10 @@ function sumarPreciosTotales() {
 
       // Sumar descuentos
       let descuentoElement = fila.querySelector(".descuento");
+      let cantidadElement = fila.querySelector(".cantidad");
       let descuento = 0;
       if (descuentoElement) {
-          descuento = parseFloat(descuentoElement.value) || 0;
+          descuento = parseFloat(descuentoElement.value*cantidadElement.value) || 0;
       }
       totalDescuento += descuento;
   }
