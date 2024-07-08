@@ -15,10 +15,10 @@
     {
         return BASE_URL."/Assets";
     }
-//     function chat($data=""){
-// $view_chat="Views/Template/chat.php";
-// require_once ($view_chat);
-//     }
+    function chat($data=""){
+        $view_chat="Views/Template/chat.php";
+        require_once ($view_chat);
+    }
     function headerAdmin($data="")
     {
         $view_header = "Views/Template/header_admin.php";

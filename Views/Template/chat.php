@@ -3,8 +3,64 @@
   <i class="fas fa-comment fa-2x"></i>
 </div>
 
+<!-- chat panel  -->
+<section id="chat-panel" class="h-75" style="display: none; width: 100%; max-width:600px;">
+  <div class="container py-3 h-100">
+    <div class="row h-100">
+      <div class="col-md-12">
+        <div class="card h-100" id="chat3" style="border-radius: 15px; overflow: hidden;">
+          <div class="card-body h-100">
+            <div class="row h-100">
+              <div class="w-100">
+                <div class="input-group rounded mb-3">
+                  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                    aria-describedby="search-addon" />
+                  <span class="input-group-text border-0" id="search-addon">
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+                <div data-mdb-perfect-scrollbar="true" style="position: relative; height: 100%;">
+                  <ul class="list-unstyled mb-0" style="max-height: 100%; height:390px; overflow-y: auto;">
+                    <?php
+                    for ($i = 0; $i < 100; $i++) {
+                      ?>
+                      <li class="p-2 border-bottom">
+                        <a href="#!" id="<?php echo $i; ?>" class="d-flex justify-content-between">
+                          <div class="d-flex flex-row">
+                            <div>
+                              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                                alt="avatar" class="d-flex align-self-center me-3" width="60">
+                              <span class="badge bg-success badge-dot"></span>
+                            </div>
+                            <div class="pt-1">
+                              <p class="fw-bold mb-0">Marie Horwitz</p>
+                              <p class="small text-muted">Hello, Are you there?</p>
+                            </div>
+                          </div>
+                          <div class="pt-1">
+                            <p class="small text-muted mb-1">Just now</p>
+                            <span class="badge bg-danger rounded-pill float-end">
+                              <?php echo $i; ?>
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      <?php
+                    }
+                    ?>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- chat chat -->
+
+<!-- chat chat --> 
 <section id="chat" class="" style=" display: none; width: 100%; max-width:600px;">
   <div class="container py-3">
   <div class="row">
@@ -73,60 +129,6 @@
 
 
 
-<section id="chat-panel" class="h-75" style="display: none; width: 100%; max-width:600px;">
-  <div class="container py-3 h-100">
-    <div class="row h-100">
-      <div class="col-md-12">
-        <div class="card h-100" id="chat3" style="border-radius: 15px; overflow: hidden;">
-          <div class="card-body h-100">
-            <div class="row h-100">
-              <div class="w-100">
-                <div class="input-group rounded mb-3">
-                  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                    aria-describedby="search-addon" />
-                  <span class="input-group-text border-0" id="search-addon">
-                    <i class="fas fa-search"></i>
-                  </span>
-                </div>
-                <div data-mdb-perfect-scrollbar="true" style="position: relative; height: 100%;">
-                  <ul class="list-unstyled mb-0" style="max-height: 100%; height:390px; overflow-y: auto;">
-                    <?php
-                    for ($i = 0; $i < 100; $i++) {
-                      ?>
-                      <li class="p-2 border-bottom">
-                        <a href="#!" id="<?php echo $i; ?>" class="d-flex justify-content-between">
-                          <div class="d-flex flex-row">
-                            <div>
-                              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                                alt="avatar" class="d-flex align-self-center me-3" width="60">
-                              <span class="badge bg-success badge-dot"></span>
-                            </div>
-                            <div class="pt-1">
-                              <p class="fw-bold mb-0">Marie Horwitz</p>
-                              <p class="small text-muted">Hello, Are you there?</p>
-                            </div>
-                          </div>
-                          <div class="pt-1">
-                            <p class="small text-muted mb-1">Just now</p>
-                            <span class="badge bg-danger rounded-pill float-end">
-                              <?php echo $i; ?>
-                            </span>
-                          </div>
-                        </a>
-                      </li>
-                      <?php
-                    }
-                    ?>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 
 
