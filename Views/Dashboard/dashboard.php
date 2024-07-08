@@ -1,7 +1,8 @@
 <?php
 headerAdmin($data);
-// chat($data);
-getModal('chat',$data);
+
+// getModal('chat',$data);
+getModalChat('modalChat');
 
 // Configurar la zona horaria
 date_default_timezone_set('America/Lima');

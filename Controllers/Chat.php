@@ -18,9 +18,7 @@ class Chat extends Controllers
 		$data['page_title'] = "chat";
 		$data['page_name'] = "chat";
 		$data['page_functions_js'] = "functions_chats.js"; // Asegúrate de tener el archivo JS correspondiente
-        // $this->views->getView($this, "chats", $data);
         $this->views->getModal('chat',$data);
-        // $this->views->chat($data="");
     }
 
 
