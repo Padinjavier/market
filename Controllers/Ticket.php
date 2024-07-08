@@ -17,10 +17,7 @@ class Ticket extends Controllers {
             
             // Verificar si hay resultados
             if(!empty($datos_venta)) {
-                // Generar PDF
-                // Convertir el array a JSON
                 // $json_datos_venta = json_encode($datos_venta);
-                // Mostrar el JSON
                 // echo $json_datos_venta;
                 // echo($datos_venta['codigo_venta']);
                 $this->generarPDF($datos_venta);
@@ -40,13 +37,19 @@ class Ticket extends Controllers {
         $direccion_empresa = DIRECCION;
         $telefono_empresa = TELEMPRESA;
         $email_empresa = EMAIL_EMPRESA;
-    
-        $pdf = new PDF_Code128('P', 'mm', array(80, 258));
+        $linkimg = media() . "/tienda/images/logo.png";
+        
+        $pdf = new PDF_Code128('P', 'mm', array(80, 758));
         $pdf->SetMargins(4, 10, 4);
         $pdf->AddPage();
         $pdf->SetFont('Arial','B',10);
         $pdf->SetTextColor(0,0,0);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($nombre_empresa)),0,'C',false);
+        $pageWidth = $pdf->GetPageWidth();
+        $imageWidth = 30; // Ancho de la imagen
+        $positionX = ($pageWidth - $imageWidth) / 2;
+        $pdf->Image($linkimg, $positionX, $pdf->GetY(), $imageWidth);
+        $pdf->Ln( $imageWidth/2); // Espacio después de la imagen
         $pdf->SetFont('Arial','',9);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",$direccion_empresa),0,'C',false);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$telefono_empresa),0,'C',false);
@@ -99,6 +102,7 @@ class Ticket extends Controllers {
         $pdf->Ln(3);
         $pdf->Cell(0,5,iconv("UTF-8","ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
         $pdf->Ln(3);
+
         // /----------  Seleccionando detalles de la venta  ----------/
         $venta_detalle = $this->model->seleccionarDetalleDatos($datos_venta['venta_codigo']);
         $lineNumber = 1; // Initialize line number
@@ -124,7 +128,6 @@ class Ticket extends Controllers {
         $subtotal = 0;
         $descuentototal = 0;
         
-        
         foreach ($venta_detalle as $detalle) {
             $importe = $detalle['detalle_venta_precio_uni'] * $detalle['detalle_venta_cantidad'];
             $subtotal += $importe;
@@ -132,8 +135,6 @@ class Ticket extends Controllers {
             $importe2 = $detalle['detalle_venta_descuento'] * $detalle['detalle_venta_cantidad'];
             $descuentototal += $importe2;
         }
-
-
 
         $pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
         $pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Sub Total:"),0,0,'C');
@@ -160,44 +161,39 @@ class Ticket extends Controllers {
 
         $pdf->Ln(9);
 
-        $pdf->Code128(5,$pdf->GetY(),$datos_venta['venta_codigo'],70,20);
-        $pdf->SetXY(0,$pdf->GetY()+21);
-        $pdf->SetFont('Arial','',14);
-        $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",$datos_venta['venta_codigo']),0,'C',false);
+        $barcodeWidth = 50;  // Ancho del código de barras en mm
+        $positionX = ($pdf->GetPageWidth() - $barcodeWidth) / 2;
         
+        $pdf->Code128($positionX, $pdf->GetY(), $datos_venta['venta_codigo'], $barcodeWidth, 10);
+        $pdf->SetXY(0, $pdf->GetY() + 11);
+        $pdf->SetFont('Arial','',11);
+        $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",$datos_venta['venta_codigo']),0,'C',false);
+        $pdf->Ln(9);
+        $pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+
 		$pdf->Output("I","Ticket_Nro".$datos_venta['venta_codigo'].".pdf",true);
+        
 
     }
 
     private function errorView($datos_venta) {
+        $linkimg = media() . "/tienda/images/logo.png";
         echo '<!DOCTYPE html>
         <html lang="es">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
             <title>'.NOMBRE_EMPESA.'</title>
-            <?php     headerAdmin($data);  ?>
         </head>
         <body>
             <div class="main-container">
                 <section class="hero-body">
                     <div class="hero-body">
-                        <p class="has-text-centered has-text-white pb-3">
-                            <i class="fas fa-rocket fa-5x"></i>
-                        </p>
                         <p class="title has-text-white">¡Ocurrió un error!'.$datos_venta['cliente_email'].'</p>
                         <p class="subtitle has-text-white">No hemos encontrado datos de la venta</p>
                     </div>
                 </section>
-                <button onclick="imprimir()">Imprimir</button>
-<script>
-function imprimir() {
-    window.print();
-}
-</script>
-
             </div>
-             <?php footerAdmin($data); ?>
         </body>
         </html>';
     }
