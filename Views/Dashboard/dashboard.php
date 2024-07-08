@@ -1,6 +1,8 @@
 <?php
 headerAdmin($data);
-chat($data);
+// chat($data);
+getModal('chat',$data);
+
 // Configurar la zona horaria
 date_default_timezone_set('America/Lima');
 // Obtener el nombre del día de la semana en español
