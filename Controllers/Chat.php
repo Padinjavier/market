@@ -23,18 +23,19 @@ class Chat extends Controllers
     }
 
 
-	public function getChat() {
-		$arrData = $this->model->getAvailableUsers();
-	
-		if (empty($arrData)) {
-			$arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
-		} else {
-			$arrResponse = array('status' => true, 'data' => $arrData);
-		}
-	
-		echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-		die();
-	}
+    public function getChat() {
+        $iduser = $_SESSION['userData']['idpersona'];
+        $arrData = $this->model->getAvailableUsers($iduser);
+    
+        if (empty($arrData)) {
+            $arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
+        } else {
+            $arrResponse = array('status' => true, 'data' => $arrData);
+        }
+    
+        echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        die();
+    }
 	
 	
 }
