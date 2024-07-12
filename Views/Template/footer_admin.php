@@ -32,5 +32,7 @@
     <script src="<?= media(); ?>/js/daynight_mode.js"></script> <!-- para cargar el js de temas  -->
 
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <!-- chat  -->
+    <script src="<?= media();?>/js/functions_chats.js"></script>
   </body>
 </html>
