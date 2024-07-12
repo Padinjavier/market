@@ -6,8 +6,8 @@
         <a class="app-sidebar__toggle text-dark" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"> <i
                 class="fas fa-bars"></i> </a>
     </div>
-    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="<?= media(); ?>/images/avatar.png"
-            alt="User Image">
+    <div class="app-sidebar__user">
+        <img class="app-sidebar__user-avatar" src="<?= media(); ?>/images/avatar.png" alt="User Image">
         <div>
             <p class="app-sidebar__user-name">
             <strong>

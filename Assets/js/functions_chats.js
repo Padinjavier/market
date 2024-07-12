@@ -1,238 +1,53 @@
 document.addEventListener('DOMContentLoaded', function(){
 
-    if(document.querySelector("#boxchat")){
+    if (document.querySelector("#boxchat")) {
         let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-        let ajaxUrl = base_url+'/Chat/getChat';
-        request.open("POST",ajaxUrl,true);
+        let ajaxUrl = base_url + '/Chat/getChat';
+        request.open("POST", ajaxUrl, true);
         request.send();
-        request.onreadystatechange = function(){
-            if(request.readyState == 4 && request.status == 200){
+        request.onreadystatechange = function() {
+            if (request.readyState == 4 && request.status == 200) {
                 let objData = JSON.parse(request.responseText);
                 console.log(objData.data);
-                if(objData.status)
-                {
-                    document.querySelector('#boxchat').innerHTML = objData.data;
-                }else{
-                    swal("Error", objData.msg , "error");
+                if (objData.status) {
+                    let html = '';
+                    objData.data.forEach((userData, i) => {
+                        html += `<li class="p-2 border-bottom">
+                                    <a href="#!" id="${i}" class="d-flex justify-content-between">
+                                        <div class="d-flex flex-row">
+                                            <div>
+                                                <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
+                                                <span class="badge bg-success badge-dot"></span>
+                                            </div>
+                                            <div class="pt-1">
+                                                <p class="fw-bold mb-0 nombre">${userData.nombres} ${userData.apellidos}</p>
+                                                <p class="small text-muted">${userData.msg}</p>
+                                            </div>
+                                        </div>
+                                        <div class="pt-1">
+                                            <p class="small text-muted mb-1">Just now</p>
+                                            <span class="badge bg-danger rounded-pill float-end">${i}</span>
+                                        </div>
+                                    </a>
+                                </li>`;
+                    });
+                    document.querySelector('#boxchat').innerHTML = html;
+                } else {
+                    let html = '';
+                    objData.data.forEach((userData, i) => {
+                        html += `<li class="p-2 border-bottom">
+                                    Por aquie esta muy desolado.
+                                </li>`;
+                    });
+                    document.querySelector('#boxchat').innerHTML = html;
                 }
             }
         }
-
     }
+    
 
 }, false);
 
-
-window.addEventListener('load', function() {
-        fntRolesEmpleado();
-}, false);
-
-function fntRolesEmpleado(){
-    if(document.querySelector('#listRolid')){
-        let ajaxUrl = base_url+'/RolesEmpleados/getSelectRoles';
-        let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-        request.open("GET",ajaxUrl,true);
-        request.send();
-        request.onreadystatechange = function(){
-            if(request.readyState == 4 && request.status == 200){
-                document.querySelector('#listRolid').innerHTML = request.responseText;
-                $('#listRolid').selectpicker('render');
-            }
-        }
-    }
-}
-
-function fntViewEmpleado(idpersona){
-    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    let ajaxUrl = base_url+'/Empleados/getEmpleado/'+idpersona;
-    request.open("GET",ajaxUrl,true);
-    request.send();
-    request.onreadystatechange = function(){
-        if(request.readyState == 4 && request.status == 200){
-            let objData = JSON.parse(request.responseText);
-
-            if(objData.status)
-            {
-               let estadoEmpleado = objData.data.status == 1 ? 
-                '<span class="badge badge-success">Activo</span>' : 
-                '<span class="badge badge-danger">Inactivo</span>';
-
-                document.querySelector("#celIdentificacion").innerHTML = objData.data.identificacion;
-                document.querySelector("#celNombre").innerHTML = objData.data.nombres;
-                document.querySelector("#celApellido").innerHTML = objData.data.apellidos;
-                document.querySelector("#celTelefono").innerHTML = objData.data.telefono;
-                document.querySelector("#celEmail").innerHTML = objData.data.email_user;
-                document.querySelector("#celTipoEmpleado").innerHTML = objData.data.nombrerolempleado;
-                document.querySelector("#celEstado").innerHTML = estadoEmpleado;
-                document.querySelector("#celFechaRegistro").innerHTML = objData.data.datecreated; 
-                $('#modalViewUser').modal('show');
-            }else{
-                swal("Error", objData.msg , "error");
-            }
-        }
-    }
-}
-
-function fntEditEmpleado(element,idpersona){
-    rowTable = element.parentNode.parentNode.parentNode; 
-    document.querySelector('#titleModal').innerHTML ="Actualizar empleado";
-    document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
-    // document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
-    document.querySelector('#btnText').innerHTML ="Actualizar";
-    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    let ajaxUrl = base_url+'/Empleados/getEmpleado/'+idpersona;
-    request.open("GET",ajaxUrl,true);
-    request.send();
-    request.onreadystatechange = function(){
-
-        if(request.readyState == 4 && request.status == 200){
-            let objData = JSON.parse(request.responseText);
-
-            if(objData.status)
-            {
-                console.log(objData.data)
-
-
-                document.querySelector("#idEmpleado").value = objData.data.idpersona;
-                document.querySelector("#txtIdentificacion").value = objData.data.identificacion;
-                document.querySelector("#txtNombre").value = objData.data.nombres;
-                document.querySelector("#txtApellido").value = objData.data.apellidos;
-                document.querySelector("#txtTelefono").value = objData.data.telefono;
-                document.querySelector("#txtEmail").value = objData.data.email_user;
-                document.querySelector("#listRolid").value =objData.data.idrolempleado;
-                $('#listRolid').selectpicker('render');
-
-                if(objData.data.status == 1){
-                    document.querySelector("#listStatus").value = 1;
-                }else{
-                    document.querySelector("#listStatus").value = 2;
-                }
-                $('#listStatus').selectpicker('render');
-            }
-        }
-    
-        $('#modalFormEmpleado').modal('show');
-    }
-}
-
-function fntDelEmpleado(idpersona){
-    swal({
-        title: "Eliminar Empleado",
-        text: "¿Realmente quiere eliminar al Empleado?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Si, eliminar!",
-        cancelButtonText: "No, cancelar!",
-        closeOnConfirm: false,
-        closeOnCancel: true
-    }, function(isConfirm) {
-        
-        if (isConfirm) 
-        {
-            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url+'/Empleados/delEmpleado';
-            // cuando es post es los name de los imput
-            let strData = "idEmpleado="+idpersona;
-            request.open("POST",ajaxUrl,true);
-            console.log(strData)
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send(strData);
-            request.onreadystatechange = function(){
-                if(request.readyState == 4 && request.status == 200){
-                    let objData = JSON.parse(request.responseText);
-                    if(objData.status)
-                    {
-                        swal("Empleados", objData.msg , "success");
-                        tableEmpleados.api().ajax.reload();
-                    }else{
-                        swal("Atención!", objData.msg , "error");
-                    }
-                }
-            }
-        }
-
-    });
-
-}
-
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Seleccionar el elemento <p> con la clase 'nombre'
-    const nombreElement = document.querySelector('.nombre');
-
-    // Verificar si se encontró el elemento
-    if (nombreElement) {
-        nombreElement.textContent += ' usuario';
-    }
-
-    document.getElementById('close-chat').addEventListener('click', closeChat);
-    document.getElementById('back-to-chat-panel').addEventListener('click', showChatPanel);
-
-    document.querySelectorAll('#chat-panel a').forEach(item => {
-        item.addEventListener('click', function() {
-            abrirChat(this.id);
-        });
-    });
-
-
-
-    
-});
-
-
-  
-
-
-function closeChat() {
-    document.getElementById('chat-panel').style.display = 'none';
-    document.getElementById('chat').style.display = 'none';
-    document.body.style.overflow = ''; // Desbloquear scroll
-}
-
-function showChatPanel() {
-    document.getElementById('chat-panel').style.display = 'block';
-    document.getElementById('chat').style.display = 'none';
-    document.body.style.overflow = 'hidden'; // Bloquear scroll
-}
-
-function abrirChat(id) {
-    document.getElementById('chat-panel').style.display = 'none';
-    document.getElementById('chat').style.display = 'block';
-
-    const paragraph = document.querySelector('#chat p.www');
-    paragraph.innerHTML += id;
-}
-
-function fntEditInfo(element, idpersona) {
-    rowTable = element.closest('tr');
-    document.querySelector('#titleModal').textContent = "Actualizar Cliente";
-    document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
-    document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
-    document.querySelector('#btnText').textContent = "Actualizar";
-
-    const request = new XMLHttpRequest();
-    const ajaxUrl = `${base_url}/Clientes/getCliente/${idpersona}`;
-    request.open("GET", ajaxUrl, true);
-    request.send();
-
-    request.onreadystatechange = function() {
-        if (request.readyState == 4 && request.status == 200) {
-            const objData = JSON.parse(request.responseText);
-            if (objData.status) {
-                document.querySelector("#idUsuario").value = objData.data.idpersona;
-                document.querySelector("#txtIdentificacion").value = objData.data.identificacion;
-                document.querySelector("#txtNombre").value = objData.data.nombres;
-                document.querySelector("#txtApellido").value = objData.data.apellidos;
-                document.querySelector("#txtTelefono").value = objData.data.telefono;
-                document.querySelector("#txtEmail").value = objData.data.email_user;
-                document.querySelector("#txtHotel").value = objData.data.hotel;
-            }
-            $('#modalFormCliente').modal('show');
-        }
-    };
-}
 
 
 function openModal() {

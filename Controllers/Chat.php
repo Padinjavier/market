@@ -29,34 +29,12 @@ class Chat extends Controllers
 		if (empty($arrData)) {
 			$arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
 		} else {
-			$html = '';
-			foreach ($arrData as $i => $userData) {
-				$html .= '<li class="p-2 border-bottom">
-							<a href="#!" id="' . $i . '" class="d-flex justify-content-between">
-								<div class="d-flex flex-row">
-									<div>
-										<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar"
-											class="d-flex align-self-center me-3" width="60">
-										<span class="badge bg-success badge-dot"></span>
-									</div>
-									<div class="pt-1">
-										<p class="fw-bold mb-0 nombre">' . htmlspecialchars($userData['nombres'] . ' ' . $userData['apellidos']) . '</p>
-										<p class="small text-muted">Hello, Are you there?</p>
-									</div>
-								</div>
-								<div class="pt-1">
-									<p class="small text-muted mb-1">Just now</p>
-									<span class="badge bg-danger rounded-pill float-end">' . $i . '</span>
-								</div>
-							</a>
-						</li>';
-			}
-	
-			$arrResponse = array('status' => true, 'data' => $html);
+			$arrResponse = array('status' => true, 'data' => $arrData);
 		}
 	
 		echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
 		die();
 	}
+	
 	
 }
