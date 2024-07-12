@@ -11,7 +11,7 @@ class Chat extends Controllers
 		}
 	}
 
-	public function Opciones()
+	public function Chat()
 	{
 		$data['page_id'] = 3;
 		$data['page_tag'] = "chat";

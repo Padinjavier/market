@@ -46,8 +46,20 @@
 					ON p.rolid = r.idrolusuario
 					WHERE p.idpersona = $this->intIdUsuario";
 			$request = $this->select($sql);
+			if ($request) {
+				$this->activarconeccionuser($this->intIdUsuario); // Llamar a la función para activar conexión
+			}
 			$_SESSION['userData'] = $request;
 			return $request;
+		}
+		public function activarconeccionuser(int $iduser)
+		{
+			$sql = "UPDATE persona SET conexion = 1 WHERE idpersona = ?";
+			$arrValues = array($iduser); // Array de valores para el marcador de posición
+	
+			$update = $this->update($sql, $arrValues);
+	
+			return $update; // Puedes retornar el resultado de la actualización si es necesario
 		}
 
 		public function getUserEmail(string $strEmail){
