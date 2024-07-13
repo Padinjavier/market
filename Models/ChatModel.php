@@ -11,7 +11,8 @@ class ChatModel extends Mysql
         parent::__construct();
     }
 
-    public function getAvailableUsers(int $iduser) {
+    public function getAvailableUsers(int $iduser)
+    {
         $sql = "SELECT p.idpersona, 
                         p.identificacion, 
                         p.nombres, 
@@ -61,6 +62,26 @@ class ChatModel extends Mysql
                     AND p.status != 0
                     ORDER BY m.msg_id DESC;
                     ";
+
+        $request = $this->select_all($sql);
+
+        return $request;
+    }
+    public function getMSQUsers(int $iduser, int $idpersona)
+    {
+        $sql = "SELECT p.nombres, 
+                    p.apellidos, 
+                    p.email_user, -- Suponiendo que la columna para el correo electrónico se llama 'email_user'
+                    p.telefono, -- Suponiendo que la columna para el número de teléfono se llama 'telefono'
+                    m.msg_id, 
+                    m.input_msg_id, 
+                    m.output_msg_id, 
+                    m.msg
+                FROM messages m 
+                INNER JOIN persona p ON p.idpersona = {$idpersona}
+                WHERE (m.input_msg_id = {$iduser} AND m.output_msg_id = {$idpersona}) 
+                OR (m.input_msg_id = {$idpersona} AND m.output_msg_id = {$iduser})
+                ORDER BY m.msg_id ASC;";
 
         $request = $this->select_all($sql);
 
