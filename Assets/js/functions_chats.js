@@ -1,49 +1,52 @@
 document.addEventListener('DOMContentLoaded', function(){
 
     if (document.querySelector("#boxchat")) {
-        let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-        let ajaxUrl = base_url + '/Chat/getChat';
-        request.open("POST", ajaxUrl, true);
-        request.send();
-        request.onreadystatechange = function() {
-            if (request.readyState == 4 && request.status == 200) {
-                let objData = JSON.parse(request.responseText);
-                console.log(objData.data);
-                if (objData.status) {
-                    let html = '';
-                    objData.data.forEach((userData, i) => {
-                        html += `<li class="p-2 border-bottom">
-                                    <a href="#!" id="${i}" class="d-flex justify-content-between">
-                                        <div class="d-flex flex-row">
-                                            <div>
-                                                <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
-                                                <span class="badge bg-success badge-dot"></span>
+        const updateChat = () => {
+            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+            let ajaxUrl = base_url + '/Chat/getChat';
+            request.open("POST", ajaxUrl, true);
+            request.send();
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    let objData = JSON.parse(request.responseText);
+                    console.log(objData.data);
+                    if (objData.status) {
+                        let html = '';
+                        objData.data.forEach((userData, i) => {
+                            let conect = (userData.conexion === 0 || userData.conexion === null) ? "<span class='text-dark'>inactivo</span>" : "<span class='text-info'>activo</span>";
+                            html += `<li class="p-2 border-bottom">
+                                        <a href="#!" id="${userData.idpersona}" class="d-flex justify-content-between">
+                                            <div class="d-flex flex-row">
+                                                <div>
+                                                    <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
+                                                    <span class="badge bg-success badge-dot"></span>
+                                                </div>
+                                                <div class="pt-1">
+                                                    <p class="fw-bold mb-0 nombre">${userData.nombres} ${userData.apellidos} ${conect}</p>
+                                                    <p class="small text-muted">${userData.msg}</p>
+                                                </div>
                                             </div>
                                             <div class="pt-1">
-                                                <p class="fw-bold mb-0 nombre">${userData.nombres} ${userData.apellidos}</p>
-                                                <p class="small text-muted">${userData.msg}</p>
+                                                <p class="small text-muted mb-1">Just now</p>
+                                                <span class="badge bg-danger rounded-pill float-end text-info">${userData.unread_count}</span>
                                             </div>
-                                        </div>
-                                        <div class="pt-1">
-                                            <p class="small text-muted mb-1">Just now</p>
-                                            <span class="badge bg-danger rounded-pill float-end">${i}</span>
-                                        </div>
-                                    </a>
-                                </li>`;
-                    });
-                    document.querySelector('#boxchat').innerHTML = html;
-                } else {
-                    let html = '';
-                    objData.data.forEach((userData, i) => {
-                        html += `<li class="p-2 border-bottom">
-                                    Por aquie esta muy desolado.
-                                </li>`;
-                    });
-                    document.querySelector('#boxchat').innerHTML = html;
+                                        </a>
+                                    </li>`;
+                        });
+                        document.querySelector('#boxchat').innerHTML = html;
+                    } else {
+                        let html = '<li class="p-2 border-bottom">Por aquí está muy desolado.</li>';
+                        document.querySelector('#boxchat').innerHTML = html;
+                    }
                 }
             }
-        }
+        };
+    
+        // Ejecutar la función updateChat cada 500 milisegundos
+        setInterval(updateChat, 500);
     }
+    
+    
     
 
 }, false);
