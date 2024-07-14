@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-
+    let chatLength = 0; // Variable para almacenar la longitud anterior del array
     if (document.querySelector("#boxchat")) {
         const updateChat = () => {
             let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
@@ -11,29 +11,34 @@ document.addEventListener('DOMContentLoaded', function () {
                     let objData = JSON.parse(request.responseText);
                     // console.log(objData.data);
                     if (objData.status) {
-                        let html = '';
-                        objData.data.forEach((userData, i) => {
-                            let conect = (userData.conexion === 0 || userData.conexion === null) ? "<span class='text-dark'>inactivo</span>" : "<span class='text-info'>activo</span>";
-                            html += `<li class="p-2 border-bottom" style="cursor: pointer;">
-                                        <a  id="${userData.idpersona}" class="d-flex justify-content-between " onclick="openChat(${userData.idpersona});">
-                                            <div class="d-flex flex-row">
-                                                <div>
-                                                    <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
-                                                    <span class="badge bg-success badge-dot"></span>
-                                                </div>
-                                                <div class="pt-1">
-                                                    <p class="fw-bold mb-0 nombre">${userData.nombres} ${userData.apellidos} ${conect}</p>
-                                                    <p class="small text-muted">${userData.msg}</p>
-                                                </div>
-                                            </div>
-                                            <div class="pt-1">
-                                                <p class="small text-muted mb-1">Just now</p>
-                                                <span class="badge bg-danger rounded-pill float-end text-info">${userData.unread_count}</span>
-                                            </div>
-                                        </a>
-                                    </li>`;
-                        });
-                        document.querySelector('#boxchat').innerHTML = html;
+                        // Solo actualizar si hay nuevos mensajes
+                        if (objData.data.length > chatLength) {
+                            chatLength = objData.data.length;
+                            let html = '';
+                            objData.data.forEach((userData, i) => {
+                                userData.msg = userData.msg.length > 80 ? userData.msg.substring(0, 80) + "..." : userData.msg;
+                                let conect = (userData.conexion === 0 || userData.conexion === null) ? "<span class='text-dark'>inactivo</span>" : "<span class='text-info'>activo</span>";
+                                html += `<li class="p-2 border-bottom" style="cursor: pointer;">
+                            <a  id="${userData.idpersona}" class="d-flex justify-content-between " onclick="openChat(${userData.idpersona});">
+                            <div class="d-flex flex-row">
+                            <div>
+                            <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
+                            <span class="badge bg-success badge-dot"></span>
+                            </div>
+                            <div class="pt-1">
+                            <p class="fw-bold mb-0 nombre">${userData.nombres} ${userData.apellidos} ${conect}</p>
+                            <p class="small text-muted" style="border-radius: 15px; word-break: break-all; overflow-wrap: break-word;">${userData.msg}</p>
+                            </div>
+                            </div>
+                            <div class="pt-1">
+                            <p class="small text-muted mb-1">Just now</p>
+                            <span class="badge bg-danger rounded-pill float-end text-info">${userData.unread_count}</span>
+                            </div>
+                            </a>
+                            </li>`;
+                            });
+                            document.querySelector('#boxchat').innerHTML = html;
+                        }
                     } else {
                         let html = '<li class="p-2 border-bottom">Por aquí está muy desolado.</li>';
                         document.querySelector('#boxchat').innerHTML = html;
@@ -66,16 +71,15 @@ function openModalChat() {
 }
 
 let messageInterval; // Variable global para almacenar el intervalo
+let previousLength = 0; // Variable para almacenar la longitud anterior del array
 
 function openChat(idpersona) {
-    // console.log("Abriendo chat para la persona con ID:", idpersona);
-
     const chatSection = document.getElementById("chat");
     const chatpanel = document.getElementById("chat-panel");
     chatSection.style.display = "block";
     chatpanel.style.display = "none";
-
-    function getmsg() {
+    var chatopen = true;
+    function getmsg(scrollToEnd = false) {
         let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
         let ajaxUrl = base_url + '/Chat/getChatuser/' + idpersona;
         request.open("POST", ajaxUrl, true);
@@ -83,33 +87,46 @@ function openChat(idpersona) {
         request.onreadystatechange = function () {
             if (request.readyState == 4 && request.status == 200) {
                 let objData = JSON.parse(request.responseText);
-                // console.log(objData.data);
                 if (objData.status) {
-                    let userData = objData.data;
-                    let htmlHeader = userData[0].nombres;
-                    document.querySelector('#namechat').innerHTML = htmlHeader;
 
-                    let html = "";
-                    userData.forEach((message, i) => {
-                        if (message.input_msg_id == idpersona) {
-                            html += `<div class="d-flex flex-row justify-content-start mb-4">
-                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
-                                                    style="width: 45px; height: 100%;">
-                                                <div class="p-3 ms-3" style="border-radius: 15px; background-color: #fbfbfb ;">
-                                                    <p class="small mb-0">${message.msg}</p>
-                                                </div>
-                                            </div>`;
-                                        } else {
-                            html += `<div class="d-flex flex-row justify-content-end mb-4">
-                                        <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237, .2);">
-                                            <p class="small mb-0">${message.msg}</p>
-                                        </div>
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar 1"
-                                            style="width: 45px; height: 100%;">
-                                    </div>`;
+                    // Solo actualizar si hay nuevos mensajes
+                    if (objData.data.length > previousLength || chatopen) {
+                        chatopen = false;
+                        previousLength = objData.data.length; // Actualizar la longitud anterior
+                        console.log("tienes: ", objData.data.length);
+
+                        let userData = objData.data;
+                        let htmlHeader = userData[0].nombres;
+                        document.querySelector('#namechat').innerHTML = htmlHeader;
+
+                        let html = "";
+                        userData.forEach((message, i) => {
+                            if (message.input_msg_id == idpersona) {
+                                html += `<div class="d-flex flex-row justify-content-start mb-4">
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
+                                                style="width: 45px; height: 100%;">
+                                            <div class="p-3 ms-3" style="border-radius: 15px; background-color: #e5e5e5 ;">
+                                                <p class="small mb-0" style="word-break: break-all; overflow-wrap: break-word;">${message.msg}</p>
+                                            </div>
+                                        </div>`;
+                            } else {
+                                html += `<div class="d-flex flex-row justify-content-end mb-4">
+                                            <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237, .2);">
+                                                <p class="small mb-0" style="word-break: break-all; overflow-wrap: break-word;">${message.msg}</p>
+                                            </div>
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar 1"
+                                                style="width: 45px; height: 100%;">
+                                        </div>`;
+                            }
+                        });
+                        document.querySelector('#msgbox').innerHTML = html;
+
+                        if (scrollToEnd) {
+                            var scrollDiv = document.getElementById('msgbox');
+                            scrollDiv.scrollTop = scrollDiv.scrollHeight;
                         }
-                    });
-                    document.querySelector('#msgbox').innerHTML = html;
+                    }
+
                 } else {
                     let html = '<li class="p-2 border-bottom">Por aquí está muy desolado.</li>';
                     document.querySelector('#msgbox').innerHTML = html;
@@ -119,10 +136,15 @@ function openChat(idpersona) {
     }
 
     if (messageInterval) {
-        clearInterval(messageInterval); // Detener el intervalo anterior si existe
+        clearInterval(messageInterval);
     }
-    messageInterval = setInterval(getmsg, 125); // Crear un nuevo intervalo
+
+    getmsg(true);
+
+    messageInterval = setInterval(() => getmsg(false), 125);
 }
+
+
 
 
 function closeChat() {
@@ -130,7 +152,7 @@ function closeChat() {
     const chatpanel = document.getElementById("chat-panel");
     chatSection.style.display = "none";
     chatpanel.style.display = "block";
-    
+
     if (messageInterval) {
         clearInterval(messageInterval); // Detener el intervalo cuando se cierre el chat
     }

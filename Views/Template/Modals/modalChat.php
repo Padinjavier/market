@@ -67,7 +67,7 @@
     <div class="input-group" style="align-items: flex-end !important">
       <textarea name="" id="textarea" class="form-control auto-expand" placeholder="Escribe un mensaje" rows="1"
         style="resize: none;"></textarea>
-      <span class="input-group-text" id="basic-addon1" style="cursor: pointer; height: 100%;">
+      <span class="input-group-text" id="basic-addon1" style="cursor: pointer;">
         <i class="bi bi-send fa-lg icon" ></i>
       </span>
     </div>
@@ -136,10 +136,33 @@
     align-items: center;
   }
 
-  /* .input-group {
-    align-items: flex-end;
-  } */
+  div#msgbox {
+    overflow: auto; /* Esto habilita el scroll */
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+}
+/* Estilos para navegadores WebKit */
+div#msgbox::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra de desplazamiento vertical */
+    height: 8px; /* Altura de la barra de desplazamiento horizontal */
+}
+
+div#msgbox::-webkit-scrollbar-thumb {
+    background-color: #F37101; /* Color del pulgar de la barra de desplazamiento */
+    border-radius: 10px; /* Radio de borde para redondear las esquinas */
+}
+
+div#msgbox::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color del fondo de la barra de desplazamiento */
+}
 </style>
+<script>
+        // JavaScript para desplazar el contenido hacia el final
+        window.onload = function() {
+            var scrollDiv = document.getElementById('msgbox');
+            scrollDiv.scrollTop = scrollDiv.scrollHeight;
+        };
+    </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.querySelector('.auto-expand');
