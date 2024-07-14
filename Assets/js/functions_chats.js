@@ -71,7 +71,7 @@ function openModalChat() {
 }
 
 let messageInterval; // Variable global para almacenar el intervalo
-let previousLength = 0; // Variable para almacenar la longitud anterior del array
+let previousData = ""; // Variable para almacenar los datos anteriores del array
 
 function openChat(idpersona) {
     const chatSection = document.getElementById("chat");
@@ -79,6 +79,7 @@ function openChat(idpersona) {
     chatSection.style.display = "block";
     chatpanel.style.display = "none";
     var chatopen = true;
+
     function getmsg(scrollToEnd = false) {
         let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
         let ajaxUrl = base_url + '/Chat/getChatuser/' + idpersona;
@@ -88,11 +89,11 @@ function openChat(idpersona) {
             if (request.readyState == 4 && request.status == 200) {
                 let objData = JSON.parse(request.responseText);
                 if (objData.status) {
-
-                    // Solo actualizar si hay nuevos mensajes
-                    if (objData.data.length > previousLength || chatopen) {
+                    let currentData = JSON.stringify(objData.data); // Convertir los datos actuales a string JSON
+                    // Solo actualizar si hay cambios en los mensajes
+                    if (currentData !== previousData || chatopen) {
                         chatopen = false;
-                        previousLength = objData.data.length; // Actualizar la longitud anterior
+                        previousData = currentData; // Actualizar los datos anteriores
                         console.log("tienes: ", objData.data.length);
 
                         let userData = objData.data;
