@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         let html = '';
                         objData.data.forEach((userData, i) => {
                             let conect = (userData.conexion === 0 || userData.conexion === null) ? "<span class='text-dark'>inactivo</span>" : "<span class='text-info'>activo</span>";
-                            html += `<li class="p-2 border-bottom">
+                            html += `<li class="p-2 border-bottom" style="cursor: pointer;">
                                         <a  id="${userData.idpersona}" class="d-flex justify-content-between " onclick="openChat(${userData.idpersona});">
                                             <div class="d-flex flex-row">
                                                 <div>
@@ -92,20 +92,20 @@ function openChat(idpersona) {
                     let html = "";
                     userData.forEach((message, i) => {
                         if (message.input_msg_id == idpersona) {
+                            html += `<div class="d-flex flex-row justify-content-start mb-4">
+                                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
+                                                    style="width: 45px; height: 100%;">
+                                                <div class="p-3 ms-3" style="border-radius: 15px; background-color: #fbfbfb ;">
+                                                    <p class="small mb-0">${message.msg}</p>
+                                                </div>
+                                            </div>`;
+                                        } else {
                             html += `<div class="d-flex flex-row justify-content-end mb-4">
-                                        <div class="p-3 me-3 border" style="border-radius: 15px; background-color: #fbfbfb;">
+                                        <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237, .2);">
                                             <p class="small mb-0">${message.msg}</p>
                                         </div>
                                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar 1"
                                             style="width: 45px; height: 100%;">
-                                    </div>`;
-                        } else {
-                            html += `<div class="d-flex flex-row justify-content-start mb-4">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
-                                            style="width: 45px; height: 100%;">
-                                        <div class="p-3 ms-3" style="border-radius: 15px; background-color: rgba(57, 192, 237, .2);">
-                                            <p class="small mb-0">${message.msg}</p>
-                                        </div>
                                     </div>`;
                         }
                     });
@@ -130,12 +130,12 @@ function closeChat() {
     const chatpanel = document.getElementById("chat-panel");
     chatSection.style.display = "none";
     chatpanel.style.display = "block";
-    document.querySelector('#namechat').innerHTML = "";
-    document.querySelector('#msgbox').innerHTML = "";
-
+    
     if (messageInterval) {
         clearInterval(messageInterval); // Detener el intervalo cuando se cierre el chat
     }
+    document.querySelector('#namechat').innerHTML = "";
+    document.querySelector('#msgbox').innerHTML = "";
 }
 // Verificar si los elementos existen antes de agregarles los event listeners
 if (document.getElementById("close-chat") && document.getElementById("back-to-chat-panel")) {

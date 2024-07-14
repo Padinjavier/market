@@ -64,37 +64,15 @@
           style="width: 45px; height: 100%;">
       </div>
     </div>
-
-    <div class="form-outline">
-      <textarea class="form-control" id="textAreaExample" rows="1"></textarea>
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Escribe un mensaje" aria-label="Input group example"
+        aria-describedby="basic-addon1">
+      <span class="input-group-text" id="basic-addon1" style="cursor: pointer;">
+        <i class="bi bi-send fa-lg icon"></i>
+      </span>
     </div>
   </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <style>
@@ -164,7 +142,3 @@
     align-items: center;
   }
 </style>
-
-<script>
-
-</script>
