@@ -9,7 +9,7 @@
       <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
         aria-describedby="search-addon" />
       <span class="input-group-text border-0" id="search-addon">
-        <i class="fas fa-search"></i>
+        <i class="fas fa-search "></i>
       </span>
     </div>
     <div data-mdb-perfect-scrollbar="true" class="h-100" style="position: relative;">
@@ -41,9 +41,9 @@
 <!-- chat chat -->
 <section id="chat" class="h-75">
   <div class="bg-primary p-3 text-white heder-chat">
-    <i class="fas fa-angle-left" id="back-to-chat-panel"></i>
+    <i class="fas fa-angle-left" id="back-to-chat-panel" style="cursor: pointer;"></i>
     <p class="mb-0 fw-bold" id="namechat">Live chat</p>
-    <i class="fas fa-times" id="close-chat"></i>
+    <i class="fas fa-times" id="close-chat" style="cursor: pointer;"></i>
   </div>
   <div class="card-body">
     <div class="conten-msg" id="msgbox">
@@ -64,11 +64,11 @@
           style="width: 45px; height: 100%;">
       </div>
     </div>
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Escribe un mensaje" aria-label="Input group example"
-        aria-describedby="basic-addon1">
-      <span class="input-group-text" id="basic-addon1" style="cursor: pointer;">
-        <i class="bi bi-send fa-lg icon"></i>
+    <div class="input-group" style="align-items: flex-end !important">
+      <textarea name="" id="textarea" class="form-control auto-expand" placeholder="Escribe un mensaje" rows="1"
+        style="resize: none;"></textarea>
+      <span class="input-group-text" id="basic-addon1" style="cursor: pointer; height: 100%;">
+        <i class="bi bi-send fa-lg icon" ></i>
       </span>
     </div>
   </div>
@@ -76,7 +76,6 @@
 
 
 <style>
-  /* Estilo del icono de mensaje */
   #chat-icon {
     position: fixed;
     bottom: 20px;
@@ -91,7 +90,6 @@
     z-index: 100;
   }
 
-  /*chat */
   #chat-panel {
     display: none;
     position: fixed;
@@ -100,10 +98,8 @@
     background-color: #fff;
     border: 1px solid #ddd;
     overflow-y: scroll;
-    /* width: 100%; */
     max-height: calc(100vh - 50px);
     z-index: 99;
-    /* Altura máxima */
     width: 100%;
     max-width: 600px;
     overflow: hidden;
@@ -119,11 +115,9 @@
     background-color: #fff;
     border: 1px solid #ddd;
     z-index: 101;
-    /* Altura máxima */
     width: 100%;
     max-width: 600px;
     overflow: hidden;
-    /* Oculta el contenido que sobresale */
     box-shadow: -3px -4px 20px 6px rgb(157 157 157);
     border-radius: 20px 0px 0px 0px;
   }
@@ -141,4 +135,32 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  /* .input-group {
+    align-items: flex-end;
+  } */
 </style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const textarea = document.querySelector('.auto-expand');
+
+    textarea.addEventListener('input', function () {
+      textarea.style.height = 'auto';
+
+      const newHeight = Math.min(textarea.scrollHeight, 1.5 * 5 * 16) + 'px';
+      textarea.style.height = newHeight;
+
+      if (textarea.scrollHeight > parseInt(newHeight)) {
+        textarea.style.overflowY = 'auto';
+      } else {
+        textarea.style.overflowY = 'hidden';
+      }
+
+      if (textarea.value.trim() === '') {
+        textarea.style.height = 'auto';
+      }
+    });
+
+    textarea.dispatchEvent(new Event('input'));
+  });
+</script>

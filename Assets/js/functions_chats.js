@@ -134,8 +134,11 @@ function closeChat() {
     if (messageInterval) {
         clearInterval(messageInterval); // Detener el intervalo cuando se cierre el chat
     }
+    // reset todos los mensajes nombre de usuarios y texarea 
     document.querySelector('#namechat').innerHTML = "";
     document.querySelector('#msgbox').innerHTML = "";
+    document.querySelector('#textarea').value = "";
+    document.querySelector('#textarea').style.height = 'auto';
 }
 // Verificar si los elementos existen antes de agregarles los event listeners
 if (document.getElementById("close-chat") && document.getElementById("back-to-chat-panel")) {
