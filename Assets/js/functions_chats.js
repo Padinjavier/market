@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.querySelector("#boxchat")) {
         const updateChat = () => {
             let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url + '/Chat/getChat';
+            let ajaxUrl = base_url + '/Chat/getChat'; // Endpoint para obtener los chats
             request.open("POST", ajaxUrl, true);
             request.send();
             request.onreadystatechange = function () {
@@ -11,34 +11,33 @@ document.addEventListener('DOMContentLoaded', function () {
                     let objData = JSON.parse(request.responseText);
                     // console.log(objData.data);
                     if (objData.status) {
-                        // Solo actualizar si hay nuevos mensajes
-                        if (objData.data.length > chatLength) {
-                            chatLength = objData.data.length;
-                            let html = '';
-                            objData.data.forEach((userData, i) => {
-                                userData.msg = userData.msg.length > 80 ? userData.msg.substring(0, 80) + "..." : userData.msg;
+                        let html = '';
+                        objData.data.forEach((userData, i) => {
+                            // Solo mostrar contactos con mensajes intercambiados
+                            if (userData.msg_id !== null) {
+                                let unreadCount = userData.unread_count || 0;
                                 let conect = (userData.conexion === 0 || userData.conexion === null) ? "<span class='text-dark'>inactivo</span>" : "<span class='text-info'>activo</span>";
                                 html += `<li class="p-2 border-bottom" style="cursor: pointer;">
-                            <a  id="${userData.idpersona}" class="d-flex justify-content-between " onclick="openChat(${userData.idpersona});">
-                            <div class="d-flex flex-row">
-                            <div>
-                            <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
-                            <span class="badge bg-success badge-dot"></span>
-                            </div>
-                            <div class="pt-1">
-                            <p class="fw-bold mb-0 nombre">${userData.nombres} ${userData.apellidos} ${conect}</p>
-                            <p class="small text-muted" style="border-radius: 15px; word-break: break-all; overflow-wrap: break-word;">${userData.msg}</p>
-                            </div>
-                            </div>
-                            <div class="pt-1">
-                            <p class="small text-muted mb-1">Just now</p>
-                            <span class="badge bg-danger rounded-pill float-end text-info">${userData.unread_count}</span>
-                            </div>
-                            </a>
-                            </li>`;
-                            });
-                            document.querySelector('#boxchat').innerHTML = html;
-                        }
+                                            <a id="${userData.idpersona}" class="d-flex justify-content-between" onclick="openChat(${userData.idpersona});">
+                                                <div class="d-flex flex-row">
+                                                    <div>
+                                                        <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
+                                                        <span class="badge bg-success badge-dot"></span>
+                                                    </div>
+                                                    <div class="pt-1">
+                                                        <p class="fw-bold mb-0 nombre">${userData.nombres} ${userData.apellidos} ${conect}</p>
+                                                        <p class="small text-muted" style="border-radius: 15px; word-break: break-all; overflow-wrap: break-word;">${userData.msg || ''}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="pt-1">
+                                                    <p class="small text-muted mb-1">Just now</p>
+                                                    <span class="badge bg-danger rounded-pill float-end text-info">${unreadCount}</span>
+                                                </div>
+                                            </a>
+                                        </li>`;
+                            }
+                        });
+                        document.querySelector('#boxchat').innerHTML = html;
                     } else {
                         let html = '<li class="p-2 border-bottom">Por aquí está muy desolado.</li>';
                         document.querySelector('#boxchat').innerHTML = html;
@@ -46,10 +45,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         };
-        // Ejecutar la función updateChat cada 500 milisegundos
+
+        // Ejecutar la función updateChat inicialmente y luego cada 250 milisegundos
+        updateChat();
         setInterval(updateChat, 250);
     }
 }, false);
+
+
 
 
 

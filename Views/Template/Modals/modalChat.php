@@ -6,13 +6,13 @@
 <section id="chat-panel" class="h-75 p-2">
   <div class="w-100 h-100 p-2">
     <div class="input-group rounded mb-3">
-      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+      <input type="search" id="search-input" class="form-control rounded" placeholder="Search" aria-label="Search"
         aria-describedby="search-addon" />
       <span class="input-group-text border-0" id="search-addon">
-        <i class="fas fa-search "></i>
+        <i class="fas fa-search " id="search-icon"></i>
       </span>
     </div>
-    <div data-mdb-perfect-scrollbar="true" class="h-100" style="position: relative;">
+    <div data-mdb-perfect-scrollbar="true" id="lista-filtro" class="h-100" style="position: relative;">
       <ul id="boxchat" class="list-unstyled mb-0" style="max-height: 100%; height:390px; overflow-y: auto; ">
         <li class="p-2 border-bottom">
           <a id="" class="d-flex justify-content-between ">
