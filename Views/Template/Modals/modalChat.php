@@ -44,6 +44,8 @@
   <div class="bg-primary p-3 text-white heder-chat">
     <i class="fas fa-angle-left" id="back-to-chat-panel" style="cursor: pointer;"></i>
     <p class="mb-0 fw-bold" id="namechat">Live chat</p>
+    <input type="hidden" id="idpersona" value="0"> 
+    <!-- <input type="text" id="idpersona" value="0"> Se establecerá dinámicamente -->
     <i class="fas fa-times" id="close-chat" style="cursor: pointer;"></i>
   </div>
   <div class="card-body">
@@ -66,9 +68,8 @@
       </div>
     </div>
     <div class="input-group" style="align-items: flex-end !important">
-      <textarea name="" id="textarea" class="form-control auto-expand" placeholder="Escribe un mensaje" rows="1"
-        style="resize: none;"></textarea>
-      <span class="input-group-text" id="basic-addon1" style="cursor: pointer;">
+      <textarea id="msg" class="form-control auto-expand" placeholder="Escribe un mensaje" rows="1" style="resize: none; height: auto; overflow-y: hidden;" spellcheck="false" data-ms-editor="true"></textarea>
+      <span class="input-group-text" id="basic-addon1" style="cursor: pointer;" onclick="fntsendmsg()">
         <i class="bi bi-send fa-lg icon"></i>
       </span>
     </div>

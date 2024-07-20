@@ -30,15 +30,15 @@ document.addEventListener('DOMContentLoaded', function () {
         let html = '';
         users.forEach(user => {
             let unreadCount = user.unread_count || 0;
-            let conect = (user.conexion === 0 || user.conexion === null) ? 
-                `<span class='text-dark'>inactivo</span>` : 
+            let conect = (user.conexion === 0 || user.conexion === null) ?
+                `<span class='text-dark'>inactivo</span>` :
                 `<span class='text-info'>activo</span>`;
-            
+
             // Define la variable para la última conexión
-            let lastConnection = user.conexion === 0 || user.conexion === null ? 
-                `<p class="small text-muted mb-1">${user.time_conexion}</p>` : 
+            let lastConnection = user.conexion === 0 || user.conexion === null ?
+                `<p class="small text-muted mb-1">${user.time_conexion}</p>` :
                 '';
-    
+
             html += `<li class="p-2 border-bottom" style="cursor: pointer;">
                         <a id="${user.idpersona}" class="d-flex justify-content-between" onclick="openChat(${user.idpersona});">
                             <div class="d-flex flex-row">
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         document.querySelector('#boxchat').innerHTML = html;
     }
-    
+
 
     if (document.querySelector("#boxchat")) {
         const updateChat = () => {
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    
+
 
     function closeChat() {
         const chatSection = document.getElementById("chat");
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('#namechat').innerHTML = "";
     }
 
-    document.querySelector('#textarea').addEventListener('keyup', function () {
+    document.querySelector('#msg').addEventListener('keyup', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
     });
@@ -136,80 +136,117 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 let messageInterval; // Variable global para almacenar el intervalo
-    let previousData = ""; // Variable para almacenar los datos anteriores del array
+let previousData = ""; // Variable para almacenar los datos anteriores del array
 
-    function openChat(idpersona) {
-        const chatSection = document.getElementById("chat");
-        const chatpanel = document.getElementById("chat-panel");
-        chatSection.style.display = "block";
-        chatpanel.style.display = "none";
-        var chatopen = true;
+function openChat(idpersona) {
+    const chatSection = document.getElementById("chat");
+    const chatpanel = document.getElementById("chat-panel");
+    chatSection.style.display = "block";
+    chatpanel.style.display = "none";
+    var chatopen = true;
 
-        function getmsg(scrollToEnd = false) {
-            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url + '/Chat/getChatuser/' + idpersona;
-            request.open("POST", ajaxUrl, true);
-            request.send();
-            request.onreadystatechange = function () {
-                if (request.readyState == 4 && request.status == 200) {
-                    let objData = JSON.parse(request.responseText);
-                    if (objData.status) {
-                        let currentData = JSON.stringify(objData.data); // Convertir los datos actuales a string JSON
-                        // Solo actualizar si hay cambios en los mensajes
-                        if (currentData !== previousData || chatopen) {
-                            chatopen = false;
-                            previousData = currentData; // Actualizar los datos anteriores
+    function getmsg(scrollToEnd = false) {
+        let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        let ajaxUrl = base_url + '/Chat/getChatuser/' + idpersona;
+        request.open("POST", ajaxUrl, true);
+        request.send();
+        request.onreadystatechange = function () {
+            if (request.readyState == 4 && request.status == 200) {
+                let objData = JSON.parse(request.responseText);
+                if (objData.status) {
+                    let currentData = JSON.stringify(objData.data); // Convertir los datos actuales a string JSON
+                    // Solo actualizar si hay cambios en los mensajes
+                    if (currentData !== previousData || chatopen) {
+                        chatopen = false;
+                        previousData = currentData; // Actualizar los datos anteriores
 
-                            console.log(objData.data);
-                            console.log("Tienes: ", objData.data.filter(msg => msg.msg && msg.msg.trim() !== '').length, " mensajes");
+                        console.log(objData.data);
+                        console.log("Tienes: ", objData.data.filter(msg => msg.msg && msg.msg.trim() !== '').length, " mensajes");
 
-                            let userData = objData.data;
-                            let htmlHeader = userData[0].nombres;
-                            document.querySelector('#namechat').innerHTML = htmlHeader;
+                        let userData = objData.data;
+                        let htmlHeader = userData[0].nombres;
+                        let htmlidpersona = userData[0].idpersona;
+                        document.querySelector('#namechat').innerHTML = htmlHeader;
+                        document.querySelector('#idpersona').value = htmlidpersona;
+                        console.log(htmlidpersona)
 
-                            let html = "";
-                            userData.forEach((message, i) => {
-                                if (message.msg !== null) {
-                                    if (message.input_msg_id == idpersona) {
-                                        html += `<div class="d-flex flex-row justify-content-start mb-4">
+                        let html = "";
+                        userData.forEach((message, i) => {
+                            if (message.msg !== null) {
+                                if (message.input_msg_id == idpersona) {
+                                    html += `<div class="d-flex flex-row justify-content-start mb-4">
                                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
                                                         style="width: 45px; height: 100%;">
                                                     <div class="p-3 ms-3" style="border-radius: 15px; background-color: #e5e5e5 ;">
                                                         <p class="small mb-0" style="word-break: break-all; overflow-wrap: break-word;">${message.msg}</p>
                                                     </div>
                                                 </div>`;
-                                    } else {
-                                        html += `<div class="d-flex flex-row justify-content-end mb-4">
+                                } else {
+                                    html += `<div class="d-flex flex-row justify-content-end mb-4">
                                                     <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237, .2);">
                                                         <p class="small mb-0" style="word-break: break-all; overflow-wrap: break-word;">${message.msg}</p>
                                                     </div>
                                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar 1"
                                                         style="width: 45px; height: 100%;">
                                                 </div>`;
-                                    }
                                 }
-                            });
-                            document.querySelector('#msgbox').innerHTML = html;
-
-                            if (scrollToEnd) {
-                                var scrollDiv = document.getElementById('msgbox');
-                                scrollDiv.scrollTop = scrollDiv.scrollHeight;
                             }
-                        }
-
-                    } else {
-                        let html = '<li class="p-2 border-bottom">Por aquí está muy desolado.</li>';
+                        });
                         document.querySelector('#msgbox').innerHTML = html;
+
+                        if (scrollToEnd) {
+                            var scrollDiv = document.getElementById('msgbox');
+                            scrollDiv.scrollTop = scrollDiv.scrollHeight;
+                        }
                     }
+
+                } else {
+                    let html = '<li class="p-2 border-bottom">Por aquí está muy desolado.</li>';
+                    document.querySelector('#msgbox').innerHTML = html;
                 }
             }
         }
-
-        if (messageInterval) {
-            clearInterval(messageInterval);
-        }
-
-        getmsg(true);
-
-        messageInterval = setInterval(() => getmsg(false), 125);
     }
+
+    if (messageInterval) {
+        clearInterval(messageInterval);
+    }
+
+    getmsg(true);
+
+    messageInterval = setInterval(() => getmsg(false), 125);
+}
+
+function fntsendmsg() {
+    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    let ajaxUrl = base_url + '/Chat/setMSG/';
+
+    let idpersona = document.querySelector("#idpersona").value;
+    let msg = document.querySelector("#msg").value.trim();
+
+    if (idpersona === '' || msg === '') {
+        alert('ID de persona o mensaje vacío.');
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('idpersona', idpersona);
+    formData.append('msg', msg);
+
+    request.open("POST", ajaxUrl, true);
+    request.send(formData);
+
+    request.onreadystatechange = function () {
+        if (request.readyState == 4 && request.status == 200) {
+            let objData = JSON.parse(request.responseText);
+            if (objData.status) {
+                console.log("Mensaje enviado");
+                // Limpia el campo de mensaje
+                document.querySelector("#msg").value = '';
+            } else {
+                console.log("Error al enviar mensaje");
+            }
+        }
+    }
+}
+

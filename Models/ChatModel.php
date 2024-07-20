@@ -70,7 +70,8 @@ class ChatModel extends Mysql
     }
     public function getMSQUsers(int $iduser, int $idpersona)
     {
-        $sql = "SELECT p.nombres, 
+        $sql = "SELECT  p.idpersona,
+                        p.nombres, 
                         p.apellidos, 
                         p.email_user, 
                         p.telefono, 
@@ -86,6 +87,19 @@ class ChatModel extends Mysql
         $request = $this->select_all($sql);
 
         return $request;
+    }
+
+    public function insertMSG(int $iduser, int $idpersona, string $msg)
+    {
+        $query_insert = "INSERT INTO messages (input_msg_id,output_msg_id,msg) VALUES(?,?,?)";
+        $arrData = array(
+            $iduser,
+            $idpersona,
+            $msg
+        );
+        $request_insert = $this->insert($query_insert, $arrData);
+        $return = $request_insert;
+        return $return;
     }
 
 }

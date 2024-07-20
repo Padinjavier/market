@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `detalle_salida` (
   CONSTRAINT `FK_detalle_salida_servicio` FOREIGN KEY (`idservicio`) REFERENCES `servicio` (`idservicio`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
--- Volcando datos para la tabla agencia.detalle_salida: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.detalle_salida: ~0 rows (aproximadamente)
 DELETE FROM `detalle_salida`;
 INSERT INTO `detalle_salida` (`iddetalle_salida`, `idsalida`, `idservicio`, `cantidad`) VALUES
 	(12, 5, 8, 3);
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `detalle_venta` (
   CONSTRAINT `detalle_venta_ibfk_2` FOREIGN KEY (`idservicio`) REFERENCES `servicio` (`idservicio`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
--- Volcando datos para la tabla agencia.detalle_venta: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.detalle_venta: ~0 rows (aproximadamente)
 DELETE FROM `detalle_venta`;
 INSERT INTO `detalle_venta` (`iddetalleventa`, `codigo_venta`, `idservicio`, `cantidad`, `precio`, `descuento`) VALUES
 	(7, 'v_1', 8, 1, 30.00, 0.00);
@@ -64,14 +64,23 @@ CREATE TABLE IF NOT EXISTS `messages` (
   KEY `input _msg_id` (`input_msg_id`) USING BTREE,
   CONSTRAINT `FK_messages_persona` FOREIGN KEY (`input_msg_id`) REFERENCES `persona` (`idpersona`),
   CONSTRAINT `FK_messages_persona_2` FOREIGN KEY (`output_msg_id`) REFERENCES `persona` (`idpersona`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla agencia.messages: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.messages: ~35 rows (aproximadamente)
 DELETE FROM `messages`;
 INSERT INTO `messages` (`msg_id`, `input_msg_id`, `output_msg_id`, `msg`, `view`) VALUES
-	(1, 22, 66, 'Hola', 1),
-	(38, 66, 22, 'adios', 0),
-	(39, 66, 22, 'eee', 0);
+	(1, 22, 66, 'Hola', 0),
+	(38, 66, 22, 'adios', 1),
+	(39, 66, 22, 'eee', 1),
+	(42, 22, 66, 'htmlidpersonahtmlidpersona', 0),
+	(43, 22, 66, '232323', 0),
+	(44, 22, 66, 'efef', 0),
+	(45, 22, 66, 'efef', 0),
+	(46, 22, 67, 'rrrr55555', 0),
+	(47, 22, 68, 'gggg', 0),
+	(48, 68, 22, 'hola', 0),
+	(50, 68, 22, 'buenas tardes', 0),
+	(51, 22, 68, 'el canopy cuanto vale', 0);
 
 -- Volcando estructura para tabla agencia.modulo
 CREATE TABLE IF NOT EXISTS `modulo` (
@@ -111,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `opciones` (
   CONSTRAINT `FK_opciones_persona` FOREIGN KEY (`personaid`) REFERENCES `persona` (`idpersona`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
--- Volcando datos para la tabla agencia.opciones: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.opciones: ~0 rows (aproximadamente)
 DELETE FROM `opciones`;
 INSERT INTO `opciones` (`id`, `personaid`, `idioma`, `tema`, `formato_moneda`) VALUES
 	(13, 22, 1, 1, 1);
@@ -194,7 +203,7 @@ INSERT INTO `persona` (`idpersona`, `identificacion`, `nombres`, `apellidos`, `t
 	(22, '74199531', 'Javier Antonio', 'Padin Flores', 917189300, 'javierpadin661@gmail.com', 'afad7b36d11a0e2c7b30ec3a16c9077d8e2c4117f282f257790bd9f70641d840', 'ID tributo javier', '0b29bd63a450601e8de9-46a10d5e89d9c8d8010f-34f01ff7f4adc772e209-2598a10910d6573c55cd', 1, '2023-11-10 03:11:09', '111111', '2222', NULL, 1, '2024-07-20 08:43:31', 1),
 	(66, '15282867', 'Yuriko', 'Vicente Arbizu', 987654321, 'arbizu@gmail.com', '9dd48242682f9b76b335154407472da5a8305bcec32d974b4913e46441e40906', NULL, NULL, 2, '2024-06-28 00:24:44', NULL, NULL, NULL, 1, '2022-07-20 08:43:35', 1),
 	(67, '15383812', 'Nelson', 'Luyo Yactayo', 940246612, 'yactayo@gmail.com', NULL, 'Hotel las brisas Lun', NULL, 2, '2024-06-28 00:26:04', NULL, NULL, NULL, 1, '2024-07-20 08:43:33', 1),
-	(68, '87654321', 'Keyler', 'Correa Vicente', 958764321, 'correa@gmail.com', NULL, NULL, NULL, 2, '2024-06-28 00:27:29', NULL, NULL, NULL, 0, '2023-07-20 08:43:34', 1);
+	(68, '87654321', 'Keyler', 'Correa Vicente', 958764321, 'correa@gmail.com', 'afad7b36d11a0e2c7b30ec3a16c9077d8e2c4117f282f257790bd9f70641d840', NULL, NULL, 2, '2024-06-28 00:27:29', NULL, NULL, NULL, 1, '2023-07-20 08:43:34', 1);
 
 -- Volcando estructura para tabla agencia.rol_empleado
 CREATE TABLE IF NOT EXISTS `rol_empleado` (
@@ -206,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `rol_empleado` (
   PRIMARY KEY (`idrolempleado`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
--- Volcando datos para la tabla agencia.rol_empleado: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.rol_empleado: ~0 rows (aproximadamente)
 DELETE FROM `rol_empleado`;
 INSERT INTO `rol_empleado` (`idrolempleado`, `nombrerolempleado`, `descripcion`, `datecreated`, `status`) VALUES
 	(26, 'Cargador', 'Encargado de traer el bote a la agencia.', '2024-06-28 00:26:43', 1);
@@ -244,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `salida` (
   CONSTRAINT `FK_salidas_persona` FOREIGN KEY (`personaid`) REFERENCES `persona` (`idpersona`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
--- Volcando datos para la tabla agencia.salida: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.salida: ~0 rows (aproximadamente)
 DELETE FROM `salida`;
 INSERT INTO `salida` (`idsalida`, `codigo_venta`, `personaid`, `persona_externa`, `descripcion`, `datecreated`, `pago`, `status`) VALUES
 	(5, 'v_1', 68, NULL, NULL, '2024-06-28 00:33:31', 1, 1);
@@ -262,7 +271,7 @@ CREATE TABLE IF NOT EXISTS `servicio` (
   PRIMARY KEY (`idservicio`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
--- Volcando datos para la tabla agencia.servicio: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.servicio: ~0 rows (aproximadamente)
 DELETE FROM `servicio`;
 INSERT INTO `servicio` (`idservicio`, `nombre`, `descripcion`, `precio`, `portada`, `datecreated`, `ruta`, `status`) VALUES
 	(8, 'Canotaje', 'Deporte extremo en el río 8km 45minutos.', 30.00, 'img_731fd9f438f393dee4d4c11d044e3f46.jpg', '2024-06-28 00:18:07', 'canotaje', 1);
@@ -302,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `venta` (
   CONSTRAINT `venta_ibfk_2` FOREIGN KEY (`idtipopago`) REFERENCES `tipopago` (`idtipopago`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
--- Volcando datos para la tabla agencia.venta: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla agencia.venta: ~0 rows (aproximadamente)
 DELETE FROM `venta`;
 INSERT INTO `venta` (`idventa`, `codigo_venta`, `datecreated`, `idvendedor`, `dni_cliente`, `idtipopago`, `total`, `status`) VALUES
 	(4, 'v_1', '2024-06-28 00:31:36', 22, '15383812', 1, 30.00, 1);

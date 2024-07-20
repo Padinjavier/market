@@ -52,5 +52,27 @@ class Chat extends Controllers
         die();
     }
 
+    public function setMSG()
+{
+    $idpersona = $_POST['idpersona'];
+    $msg = $_POST['msg'];
+    $iduser = $_SESSION['userData']['idpersona'];
+
+    if (empty($idpersona) || empty($msg)) {
+        $arrResponse = array('status' => false, 'msg' => 'Datos incompletos.');
+    } else {
+        $arrData = $this->model->insertMSG($iduser, $idpersona, $msg);
+
+        if ($arrData > 0) {
+            $arrResponse = array('status' => true, 'msg' => 'Mensaje guardado.');
+        } else {
+            $arrResponse = array('status' => false, 'msg' => 'No se pudo guardar el mensaje.');
+        }
+    }
+
+    echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+    die();
+}
+
 
 }
