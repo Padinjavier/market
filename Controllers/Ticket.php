@@ -40,9 +40,9 @@ class Ticket extends Controllers {
         $linkimg = media() . "/tienda/images/logo.png";
         
         $pdf = new PDF_Code128('P', 'mm', array(80, 758));
-        $pdf->SetMargins(4, 10, 4);
+        $pdf->SetMargins(4, 4, 4);
         $pdf->AddPage();
-        $pdf->SetFont('Arial','B',10);
+        $pdf->SetFont('Arial','B',9);
         $pdf->SetTextColor(0,0,0);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper($nombre_empresa)),0,'C',false);
         $pageWidth = $pdf->GetPageWidth();
@@ -50,26 +50,24 @@ class Ticket extends Controllers {
         $positionX = ($pageWidth - $imageWidth) / 2;
         $pdf->Image($linkimg, $positionX, $pdf->GetY(), $imageWidth);
         $pdf->Ln( $imageWidth/2); // Espacio después de la imagen
-        $pdf->SetFont('Arial','',9);
+        $pdf->SetFont('Arial','',8);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",$direccion_empresa),0,'C',false);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Teléfono: ".$telefono_empresa),0,'C',false);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Email: ".$email_empresa),0,'C',false);
     
 
-        $pdf->Ln(1);
-        $pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
-        $pdf->Ln(5);
+        $pdf->Cell(0,2,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+        $pdf->Ln(3);
 
-        $pdf->SetFont('Arial','B',10);
+        $pdf->SetFont('Arial','B',9);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",strtoupper("No. Orden: ".$datos_venta['venta_codigo'])),0,'C',false);
-        $pdf->SetFont('Arial','',9);
+        $pdf->SetFont('Arial','',8);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Fecha: ".$datos_venta['venta_fecha_hora']),0,'C',false);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",("Método Pago: ".$datos_venta['tipopago'])),0,'C',false);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Cajero: ".$datos_venta['usuario_nombre']." ".$datos_venta['usuario_apellido']),0,'C',false);
 
-        $pdf->Ln(1);
-        $pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","------------------------------------------------------"),0,0,'C');
-        $pdf->Ln(5);
+        $pdf->Cell(0,2,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+        $pdf->Ln(3);
     
         if($datos_venta['cliente_id']==1){
             $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","DNI: N/A"),0,'C',false);
@@ -85,8 +83,7 @@ class Ticket extends Controllers {
             $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Dirección: ".$datos_venta['cliente_hotel']),0,'C',false);
         }
 
-        $pdf->Ln(1);
-        $pdf->Cell(0,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+        $pdf->Cell(0,2,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
         $pdf->Ln(3);
 
         $totalWidth = 75; // Total width of the combined cells (5 + 18 + 22 + 32)
@@ -115,14 +112,13 @@ class Ticket extends Controllers {
                 $pdf->Cell(15,4,iconv("UTF-8", "ISO-8859-1",SMONEY.number_format($detalle['detalle_venta_precio_uni'],MONEDA_DECIMALES,SPD,SPM)),0,0,'C');
                 $pdf->Cell(20,4,iconv("UTF-8", "ISO-8859-1",SMONEY.number_format($detalle['detalle_venta_descuento'],MONEDA_DECIMALES,SPD,SPM)),0,0,'C');
                 $pdf->Cell(25,4,iconv("UTF-8", "ISO-8859-1",SMONEY.number_format($detalle['detalle_venta_precio_total'],MONEDA_DECIMALES,SPD,SPM)),0,0,'C');
-                $pdf->Ln(4);
                 $pdf->Ln(3);
                 $lineNumber++; // Increment line number
             }
 
         $pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
 
-        $pdf->Ln(5);
+        $pdf->Ln(3);
 
 
         $subtotal = 0;
@@ -140,36 +136,36 @@ class Ticket extends Controllers {
         $pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Sub Total:"),0,0,'C');
         $pdf->Cell(32, 5, iconv("UTF-8", "ISO-8859-1", SMONEY . number_format($subtotal, MONEDA_DECIMALES, SPD, SPM) . ' ' . CURRENCY), 0, 0, 'C');
 
-        $pdf->Ln(5);
+        $pdf->Ln(3);
         
         $pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
         $pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","Descuento:"),0,0,'C');
         $pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1",SMONEY.number_format($descuentototal,MONEDA_DECIMALES,SPD,SPM).' '.CURRENCY),0,0,'C');
 
-        $pdf->Ln(5);
+        $pdf->Ln(3);
 
         $pdf->Cell(18,5,iconv("UTF-8", "ISO-8859-1",""),0,0,'C');
         $pdf->Cell(22,5,iconv("UTF-8", "ISO-8859-1","TOTAL:"),0,0,'C');
         $pdf->Cell(32,5,iconv("UTF-8", "ISO-8859-1",SMONEY.number_format($datos_venta['venta_total'],MONEDA_DECIMALES,SPD,SPM).' '.CURRENCY),0,0,'C');
 
-        $pdf->Ln(10);
-        $pdf->SetFont('Arial','I',7);
+        $pdf->Ln(5);
+        $pdf->SetFont('Arial','I',6);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","*Esta guía de boleta sirve para el control interno de la agencia*"),0,'C',false);
 
-        $pdf->SetFont('Arial','B',9);
-        $pdf->Cell(0,7,iconv("UTF-8", "ISO-8859-1","Gracias por su compra"),'',0,'C');
+        $pdf->SetFont('Arial','B',8);
+        $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1","Gracias por su compra"),0,'C',false);
 
-        $pdf->Ln(9);
+        $pdf->Ln(1);
 
         $barcodeWidth = 50;  // Ancho del código de barras en mm
         $positionX = ($pdf->GetPageWidth() - $barcodeWidth) / 2;
         
-        $pdf->Code128($positionX, $pdf->GetY(), $datos_venta['venta_codigo'], $barcodeWidth, 10);
-        $pdf->SetXY(0, $pdf->GetY() + 11);
-        $pdf->SetFont('Arial','',11);
+        $pdf->Code128($positionX, $pdf->GetY(), $datos_venta['venta_codigo'], $barcodeWidth, 7);
+        $pdf->SetXY(0, $pdf->GetY() + 8);
+        $pdf->SetFont('Arial','',10);
         $pdf->MultiCell(0,5,iconv("UTF-8", "ISO-8859-1",$datos_venta['venta_codigo']),0,'C',false);
-        $pdf->Ln(9);
-        $pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","-------------------------------------------------------------------"),0,0,'C');
+        $pdf->Ln(3);
+        $pdf->Cell(72,5,iconv("UTF-8", "ISO-8859-1","."),0,0,'C');
 
 		$pdf->Output("I","Ticket_Nro".$datos_venta['venta_codigo'].".pdf",true);
         
