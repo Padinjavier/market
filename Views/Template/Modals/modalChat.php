@@ -9,12 +9,12 @@
     <div class="input-group rounded mb-3">
       <input type="search" id="search-input" class="form-control rounded" placeholder="Search" aria-label="Search"
         aria-describedby="search-addon" />
-      <span class="input-group-text border-0" id="search-addon">
+      <!-- <span class="input-group-text border-0" id="search-addon">
         <i class="fas fa-search " id="search-icon"></i>
-      </span>
+      </span> -->
     </div>
     <div data-mdb-perfect-scrollbar="true" id="lista-filtro" class="h-100" style="position: relative;">
-      <ul id="boxchat" class="list-unstyled mb-0" style="max-height: 100%; height:390px; overflow-y: auto; ">
+      <ul id="boxchat" class="list-unstyled mb-0 scrollbar" style="height: 93%; overflow-y: auto; ">
         <li class="p-2 border-bottom">
           <a id="" class="d-flex justify-content-between ">
             <div class="d-flex flex-row">
@@ -29,7 +29,7 @@
             </div>
             <div class="pt-1">
               <p class="small text-muted mb-1">....</p>
-              <span class="badge bg-danger rounded-pill float-end text-info">0</span>
+              <span class="badge bg-danger rounded-pill float-end text-white">0</span>
             </div>
           </a>
         </li>
@@ -164,6 +164,32 @@
     background: #f1f1f1;
     /* Color del fondo de la barra de desplazamiento */
   }
+  .scrollbar {
+    overflow: auto;
+    /* Esto habilita el scroll */
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+  }
+  
+  /* Estilos para navegadores WebKit */
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+    /* Ancho de la barra de desplazamiento vertical */
+    height: 8px;
+    /* Altura de la barra de desplazamiento horizontal */
+  }
+  
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: #F37101;
+    /* Color del pulgar de la barra de desplazamiento */
+    border-radius: 10px;
+    /* Radio de borde para redondear las esquinas */
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Color del fondo de la barra de desplazamiento */
+  }
+  
 </style>
 <script>
   // JavaScript para desplazar el contenido hacia el final
@@ -175,10 +201,10 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.querySelector('.auto-expand');
-
+    
     textarea.addEventListener('input', function () {
       textarea.style.height = 'auto';
-
+      
       const newHeight = Math.min(textarea.scrollHeight, 1.5 * 5 * 16) + 'px';
       textarea.style.height = newHeight;
 

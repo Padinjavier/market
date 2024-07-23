@@ -30,14 +30,16 @@ document.addEventListener('DOMContentLoaded', function () {
         let html = '';
         users.forEach(user => {
             let unreadCount = user.unread_count || 0;
-            let conect = (user.conexion === 0 || user.conexion === null) ?
-                `<span class='text-dark'>inactivo</span>` :
+            let conect = (user.conexion === "0" || user.conexion === null) ?
+                `<span class='text-danger'>inactivo</span>` :
                 `<span class='text-info'>activo</span>`;
 
             // Define la variable para la última conexión
-            let lastConnection = user.conexion === 0 || user.conexion === null ?
-                `<p class="small text-muted mb-1">${user.time_conexion}</p>` :
-                '';
+            let lastConnection = (user.conexion === "1") ? 
+                `<p class="small text-muted mb-1">Ahora</p>` : 
+                `<p class="small text-muted mb-1">${user.time_conexion}</p>`;
+
+
 
             html += `<li class="p-2 border-bottom" style="cursor: pointer;">
                         <a id="${user.idpersona}" class="d-flex justify-content-between" onclick="openChat(${user.idpersona});">
@@ -47,13 +49,13 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <span class="badge bg-success badge-dot"></span>
                                 </div>
                                 <div class="pt-1">
-                                    <p class="fw-bold mb-0 nombre">${user.nombres} ${user.apellidos} ${conect}</p>
+                                    <p class="fw-bold mb-0 h6 nombre">${user.nombres} ${user.apellidos} ${conect}</p>
                                     <p class="small text-muted" style="border-radius: 15px; word-break: break-all; overflow-wrap: break-word;">${user.msg || ''}</p>
                                 </div>
                             </div>
-                            <div class="pt-1">
+                            <div class="pt-1 d-flex flex-column align-items-end">
                                 ${lastConnection}
-                                <span class="badge bg-danger rounded-pill float-end text-info">${unreadCount}</span>
+                                <span class="badge bg-danger rounded-pill float-end text-white">${unreadCount}</span>
                             </div>
                         </a>
                     </li>`;
