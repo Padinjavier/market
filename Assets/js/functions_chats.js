@@ -39,14 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 `<p class="small text-muted mb-1">Ahora</p>` : 
                 `<p class="small text-muted mb-1">${user.time_conexion}</p>`;
 
-
+// Obtener las iniciales
+let initials = user.nombres.charAt(0) + user.apellidos.charAt(0);
 
             html += `<li class="p-2 border-bottom" style="cursor: pointer;">
                         <a id="${user.idpersona}" class="d-flex justify-content-between" onclick="openChat(${user.idpersona});">
                             <div class="d-flex flex-row">
-                                <div>
-                                    <img class="app-sidebar__user-avatar" src="Assets/images/avatar1.png" alt="User Image">
-                                    <span class="badge bg-success badge-dot"></span>
+                                <div class="d-flex align-items-center pr-2">
+                                    <div class="initials-circle bg-primary text-white text-center">
+                                        <span>${initials}</span>
+                                    </div>
                                 </div>
                                 <div class="pt-1">
                                     <p class="fw-bold mb-0 h6 nombre">${user.nombres} ${user.apellidos} ${conect}</p>

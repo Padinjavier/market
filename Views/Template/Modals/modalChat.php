@@ -189,7 +189,17 @@
     background: #f1f1f1;
     /* Color del fondo de la barra de desplazamiento */
   }
-  
+  .initials-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
 </style>
 <script>
   // JavaScript para desplazar el contenido hacia el final
