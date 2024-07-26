@@ -5,10 +5,20 @@
 class ChatModel extends Mysql
 {
     private $conn;
+    private $msg_id;
+    private $input_msg_id;
+    private $output_msg_id;
+    private $msg;
+    private $view;
 
     public function __construct()
     {
         parent::__construct();
+        $this->msg_id = 0;
+        $this->input_msg_id = 0;
+        $this->output_msg_id = 0;
+        $this->msg = "";
+        $this->view = 0;
     }
 
     public function getAvailableUsers(int $iduser)
@@ -91,16 +101,18 @@ class ChatModel extends Mysql
 
     public function insertMSG(int $iduser, int $idpersona, string $msg)
     {
-        $query_insert = "INSERT INTO messages (input_msg_id,output_msg_id,msg) VALUES(?,?,?)";
+        $this->input_msg_id = $iduser;
+        $this->output_msg_id = $idpersona;
+        $this->msg = $msg;
+
+        $query_insert = "INSERT INTO messages (input_msg_id, output_msg_id, msg) VALUES(?,?,?)";
         $arrData = array(
-            $iduser,
-            $idpersona,
-            $msg
+            $this->input_msg_id,
+            $this->output_msg_id,
+            $this->msg
         );
         $request_insert = $this->insert($query_insert, $arrData);
-        $return = $request_insert;
-        return $return;
+        return $request_insert;
     }
-
 }
 ?>

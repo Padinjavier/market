@@ -3,13 +3,13 @@
 
   var treeviewMenu = $(".app-menu");
 
-  // Toggle Sidebar
+  // Sidebar functionality
   $('[data-toggle="sidebar"]').click(function (event) {
     event.preventDefault();
     $(".app").toggleClass("sidenav-toggled");
   });
 
-  // Activate sidebar treeview toggle
+  // Treeview menu functionality
   $("[data-toggle='treeview']").click(function (event) {
     event.preventDefault();
     if (!$(this).parent().hasClass("is-expanded")) {
@@ -21,25 +21,22 @@
     $(this).parent().toggleClass("is-expanded");
   });
 
-  // Set initial active toggle
   $("[data-toggle='treeview.'].is-expanded")
     .parent()
     .toggleClass("is-expanded");
 
-  //Activate bootstrip tooltips
   $("[data-toggle='tooltip']").tooltip();
 })();
 
-//desactivar el menu cuando se dea click a nuevo
+// Menu toggle function
 function clocemenu() {
   $(".app").addClass("sidenav-toggled");
 }
-// Expresión regular para verificar si la URL termina con "/agencia/pedidos/orden" seguido opcionalmente por un número
+
+// URL pattern matching
 var regex = /\/agencia\/pedidos\/orden\/\d*$/;
 
-// Verificar si la URL actual coincide con el patrón de la expresión regular
 if (regex.test(window.location.href)) {
-  // Ejecutar console.log("gol")
   console.log("gol");
 } else {
   const elements = document.querySelectorAll(".app-content, .app-nav");
@@ -51,40 +48,33 @@ if (regex.test(window.location.href)) {
   });
 }
 
-
+// DOM content loaded event handler
 document.addEventListener('DOMContentLoaded', function () {
-  // Obtener la URL actual
+  // Add sidenav-toggled class on page load
+  const appElement = document.querySelector('.app.sidebar-mini.pace-running');
+  if (appElement && !appElement.classList.contains('sidenav-toggled')) {
+    appElement.classList.add('sidenav-toggled');
+  }
+
+  // Current URL
   var currentUrl = window.location.href;
 
-  // Verificar si la URL contiene /empleados o /rolesempleados
-  if (currentUrl.includes('/empleados') || currentUrl.includes('/rolesempleados')) {
-      // Seleccionar el <li> con el id menu-empleados
-      var menuItem = document.getElementById('menu-empleados');
+  // Menu item activation based on URL
+  function activateMenuItem(urlPart, menuId) {
+    if (currentUrl.includes(urlPart)) {
+      var menuItem = document.getElementById(menuId);
       if (menuItem) {
-          // Agregar la clase 'active'
-          menuItem.classList.add('active');
+        menuItem.classList.add('active');
       }
+    }
   }
 
-  if (currentUrl.includes('/clientes')) {
-      var menuItem = document.getElementById('menu-clientes');
-      if (menuItem) {
-          menuItem.classList.add('active');
-      }
-  }
-  
-  if (currentUrl.includes('/usuarios') || currentUrl.includes('/rolesusuarios')) {
-      var menuItem = document.getElementById('menu-usuario');
-      if (menuItem) {
-          menuItem.classList.add('active');
-      }
-  }
-  if (currentUrl.includes('/pedidos') || currentUrl.includes('/productos')|| currentUrl.includes('/servicios')) {
-      // Seleccionar el <li> con el id menu-empleados
-      var menuItem = document.getElementById('menu-puntoventa');
-      if (menuItem) {
-          // Agregar la clase 'active'
-          menuItem.classList.add('active');
-      }
-  }
+  activateMenuItem('/empleados', 'menu-empleados');
+  activateMenuItem('/rolesempleados', 'menu-empleados');
+  activateMenuItem('/clientes', 'menu-clientes');
+  activateMenuItem('/usuarios', 'menu-usuario');
+  activateMenuItem('/rolesusuarios', 'menu-usuario');
+  activateMenuItem('/pedidos', 'menu-puntoventa');
+  activateMenuItem('/productos', 'menu-puntoventa');
+  activateMenuItem('/servicios', 'menu-puntoventa');
 });
