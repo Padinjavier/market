@@ -13,7 +13,7 @@ const DB_PASSWORD = "javier20";
 const DB_CHARSET = "utf8";
 
 //Para envío de correo
-const ENVIRONMENT = 1; // Local: 0, Produccón: 1;
+const ENVIRONMENT = 0; // Local: 0, Produccón: 1;
 
 //Deliminadores decimal y millar Ej. 24,1989.00
 const MONEDA_DECIMALES =1;
