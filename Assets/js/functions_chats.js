@@ -1,7 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let previousDatauser = ""; // Variable para almacenar los datos anteriores del array
-    let isSearching = false; // Bandera para pausar la actualización durante la búsqueda
-    let allUsersData = []; // Variable para almacenar todos los usuarios
+    let previousDatauser = "";
+    let isSearching = false;
+    let allUsersData = [];
+    let audioEnabled = false; // Variable para controlar si el audio está habilitado
+    const audio = new Audio("http://192.168.56.1/market/Assets/music/ringtones-heart.mp3");
+    // Escucha el primer clic del usuario en la página para habilitar el audio
+    document.addEventListener('click', () => {
+        audioEnabled = true;
+        console.log("Notificaciones de sonido habilitadas.");
+    }, { once: true });
+
     document.getElementById("chat-icon").addEventListener("click", openModalChat);
 
     function openModalChat() {
@@ -10,15 +18,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const chatIcon = document.getElementById("icono");
         if (chatPanel.style.display === "none" || chatPanel.style.display === "") {
             chatPanel.style.display = "block";
-            document.documentElement.style.overflow = "hidden"; // Bloquear scroll en el html
+            document.documentElement.style.overflow = "hidden";
             chatIcon.classList.remove("fa-comment");
-            chatIcon.classList.add("bi", "bi-x-lg"); // Cambiar a ícono de cerrar
+            chatIcon.classList.add("bi", "bi-x-lg");
         } else {
             chatPanel.style.display = "none";
-            document.documentElement.style.overflow = ""; // Desbloquear scroll en el html
+            document.documentElement.style.overflow = "";
             chatIcon.classList.remove("bi", "bi-x-lg");
-            chatIcon.classList.add("fas", "fa-comment"); // Cambiar a ícono de comentario
-            resetChatList(); // Restablecer el listado de chats cuando se cierra el panel
+            chatIcon.classList.add("fas", "fa-comment");
+            resetChatList();
         }
     }
 
@@ -28,18 +36,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function displayChatUsers(users) {
         let html = '';
+        let totalmsg=0;
         users.forEach(user => {
             let unreadCount = user.unread_count || 0;
+            totalmsg= totalmsg + unreadCount;
             let conect = (user.conexion === "0" || user.conexion === null) ?
                 `<span class='text-danger'>inactivo</span>` :
                 `<span class='text-info'>activo</span>`;
 
-            // Define la variable para la última conexión
             let lastConnection = (user.conexion === "1") ?
                 `<p class="small text-muted mb-1">Ahora</p>` :
                 `<p class="small text-muted mb-1">${user.time_conexion}</p>`;
 
-            // Obtener las iniciales
             let initials = user.nombres.charAt(0) + user.apellidos.charAt(0);
 
             html += `<li class="p-2 border-bottom" style="cursor: pointer;">
@@ -62,29 +70,37 @@ document.addEventListener('DOMContentLoaded', function () {
                         </a>
                     </li>`;
         });
+        if(totalmsg>0){
+            document.querySelector('#nummsg').innerHTML = totalmsg;
+            document.querySelector('#nummsg').classList.remove('d-none');
+        }else{
+            document.querySelector('#nummsg').classList.add('d-none');
+        }
         document.querySelector('#boxchat').innerHTML = html;
     }
 
-
     if (document.querySelector("#boxchat")) {
         const updateChat = () => {
-            if (isSearching) return; // Pausar la actualización si se está buscando
+            if (isSearching) return;
 
             let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url + '/Chat/getChat'; // Endpoint para obtener los chats
+            let ajaxUrl = base_url + '/Chat/getChat';
             request.open("POST", ajaxUrl, true);
             request.send();
             request.onreadystatechange = function () {
                 if (request.readyState == 4 && request.status == 200) {
                     let objData = JSON.parse(request.responseText);
                     if (objData.status) {
-                        let currentDatauser = JSON.stringify(objData.data); // Convertir los datos actuales a string JSON
+                        let currentDatauser = JSON.stringify(objData.data);
 
                         if (currentDatauser !== previousDatauser) {
-                            previousDatauser = currentDatauser; // Actualizar los datos anteriores
-                            allUsersData = objData.data; // Guardar todos los usuarios
-                            console.log(allUsersData)
-                            displayChatUsers(objData.data.filter(user => user.msg !== "")); // Mostrar solo usuarios con mensajes
+                            if (audioEnabled && previousDatauser !== "") {
+                                audio.play().catch(error => console.log("Error reproduciendo el audio:", error));
+                            }
+
+                            previousDatauser = currentDatauser;
+                            allUsersData = objData.data;
+                            displayChatUsers(objData.data.filter(user => user.msg !== ""));
                         }
                     } else {
                         let html = '<li class="p-2 border-bottom">Por aquí está muy desolado.</li>';
@@ -94,15 +110,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         };
 
-        // Ejecutar la función updateChat inicialmente y luego cada 250 milisegundos
         updateChat();
         setInterval(updateChat, 250);
 
-        // Añadir event listener al input de búsqueda
         const searchInput = document.getElementById('search-input');
         searchInput.addEventListener('focus', function () {
             isSearching = true;
-            displayChatUsers(allUsersData); // Mostrar todos los usuarios al hacer clic en la barra de búsqueda
+            displayChatUsers(allUsersData);
         });
         searchInput.addEventListener('blur', function () {
             isSearching = false;
@@ -113,11 +127,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const nombre = `${user.nombres} ${user.apellidos}`.toLowerCase();
                 return nombre.includes(searchTerm);
             });
-            displayChatUsers(filteredUsers); // Mostrar usuarios filtrados por el término de búsqueda
+            displayChatUsers(filteredUsers);
         });
     }
-
-
 
     function closeChat() {
         const chatSection = document.getElementById("chat");
@@ -140,6 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+//-----------------------------------------------------------------------------
 let messageInterval; // Variable global para almacenar el intervalo
 let previousData = ""; // Variable para almacenar los datos anteriores del array
 

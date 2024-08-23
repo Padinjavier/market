@@ -1,8 +1,19 @@
-<!-- onclick="openModalChat();" -->
+<!--ModalChat();" -->
 <a id="chat-icon" type="button" class="d-flex justify-content-center align-items-center">
   <i id="icono" class="fas fa-comment fa-2x"></i>
+  <p id="nummsg" class="d-none">0</p>
 </a>
-
+<style>
+  #nummsg{
+    position: absolute;
+    color: red;
+    top: -6px;
+    right: -1px;
+    font-size: 20px;
+    font-weight: 900;
+    text-shadow: 0px 0px 20px rgb(0 0 0);
+  }
+</style>
 <!-- chat panel  -->
 <section id="chat-panel" class="h-75 p-2">
   <div class="w-100 h-100 p-2">
