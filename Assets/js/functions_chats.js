@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 `<span class='text-info'>activo</span>`;
 
             // Define la variable para la última conexión
-            let lastConnection = (user.conexion === "1") ? 
-                `<p class="small text-muted mb-1">Ahora</p>` : 
+            let lastConnection = (user.conexion === "1") ?
+                `<p class="small text-muted mb-1">Ahora</p>` :
                 `<p class="small text-muted mb-1">${user.time_conexion}</p>`;
 
-// Obtener las iniciales
-let initials = user.nombres.charAt(0) + user.apellidos.charAt(0);
+            // Obtener las iniciales
+            let initials = user.nombres.charAt(0) + user.apellidos.charAt(0);
 
             html += `<li class="p-2 border-bottom" style="cursor: pointer;">
                         <a id="${user.idpersona}" class="d-flex justify-content-between" onclick="openChat(${user.idpersona});">
@@ -83,6 +83,7 @@ let initials = user.nombres.charAt(0) + user.apellidos.charAt(0);
                         if (currentDatauser !== previousDatauser) {
                             previousDatauser = currentDatauser; // Actualizar los datos anteriores
                             allUsersData = objData.data; // Guardar todos los usuarios
+                            console.log(allUsersData)
                             displayChatUsers(objData.data.filter(user => user.msg !== "")); // Mostrar solo usuarios con mensajes
                         }
                     } else {
@@ -175,27 +176,85 @@ function openChat(idpersona) {
                         console.log(htmlidpersona)
 
                         let html = "";
+                        let previousDate = null;
+
                         userData.forEach((message, i) => {
-                            if (message.msg !== null) {
-                                if (message.input_msg_id == idpersona) {
-                                    html += `<div class="d-flex flex-row justify-content-start mb-4">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1"
-                                                        style="width: 45px; height: 100%;">
-                                                    <div class="p-3 ms-3" style="border-radius: 15px; background-color: #e5e5e5 ;">
-                                                        <p class="small mb-0" style="word-break: break-all; overflow-wrap: break-word;">${message.msg}</p>
-                                                    </div>
-                                                </div>`;
+                            const messageDate = new Date(message.datecreated);
+
+                            // Truncar las horas, minutos y segundos de la fecha para comparar solo la fecha (día, mes, año)
+                            const currentDate = new Date();
+                            const truncatedMessageDate = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
+                            const truncatedCurrentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
+                            // Formatear la hora y minutos del mensaje
+                            const messageTime = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                            // Verificar si se debe agregar un separador
+                            if (previousDate === null || !isSameDay(previousDate, truncatedMessageDate)) {
+                                const daysAgo = daysBetween(truncatedMessageDate, truncatedCurrentDate);
+
+                                if (daysAgo === 0) {
+                                    html += `<div class="day-separator text-center fw-bold">Hoy</div>`;
+                                } else if (daysAgo === 1) {
+                                    html += `<div class="day-separator text-center fw-bold">Ayer</div>`;
+                                } else if (daysAgo < 5) {
+                                    const dayName = getDayName(truncatedMessageDate);
+                                    html += `<div class="day-separator text-center fw-bold">${dayName}</div>`;
                                 } else {
-                                    html += `<div class="d-flex flex-row justify-content-end mb-4">
-                                                    <div class="p-3 me-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237, .2);">
-                                                        <p class="small mb-0" style="word-break: break-all; overflow-wrap: break-word;">${message.msg}</p>
-                                                    </div>
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar 1"
-                                                        style="width: 45px; height: 100%;">
-                                                </div>`;
+                                    const formattedDate = formatDate(truncatedMessageDate);
+                                    html += `<div class="day-separator text-center fw-bold">${formattedDate}</div>`;
                                 }
+
+                                previousDate = truncatedMessageDate;
+                            }
+
+                            // Resto del código para mostrar el mensaje
+                            if (message.input_msg_id == idpersona) {
+                                html += `<div class="d-flex flex-row justify-content-start mb-4">
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1" style="width: 45px; height: 100%;">
+                                            <div class="p-2 pr-3" style="border-radius: 15px; background-color: #e5e5e5;" title="${message.datecreated}">
+                                                <p class="small mb-0 ml-5" style="word-break: break-all; overflow-wrap: break-word; font-size: 13.5px;">${message.msg}</p>
+                                                <p class="small mb-0" style="font-size: 10px; text-align:start;">${messageTime}</p>
+                                            </div>
+                                        </div>`;
+                            } else {
+                                html += `<div class="d-flex flex-row justify-content-end mb-4">
+                                            <div class="p-2 pl-3 border" style="border-radius: 15px; background-color: rgba(57, 192, 237, .2);" title="${message.datecreated}">
+                                                <p class="small mb-0 mr-5" style="word-break: break-all; overflow-wrap: break-word; font-size: 13.5px;">${message.msg}</p>
+                                                <p class="small mb-0" style="font-size: 10px; text-align:end;">${messageTime}</p>
+                                            </div>
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar 1" style="width: 45px; height: 100%;">
+                                        </div>`;
                             }
                         });
+
+                        // Función para verificar si dos fechas son el mismo día
+                        function isSameDay(date1, date2) {
+                            return date1.getDate() === date2.getDate() &&
+                                date1.getMonth() === date2.getMonth() &&
+                                date1.getFullYear() === date2.getFullYear();
+                        }
+
+                        // Función para obtener la diferencia en días entre dos fechas
+                        function daysBetween(date1, date2) {
+                            const oneDay = 24 * 60 * 60 * 1000;
+                            return Math.floor((date2 - date1) / oneDay);
+                        }
+
+                        // Función para obtener el nombre del día
+                        function getDayName(date) {
+                            const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+                            return days[date.getDay()];
+                        }
+
+                        // Función para formatear la fecha como "dd/mm/yyyy"
+                        function formatDate(date) {
+                            return date.getDate().toString().padStart(2, '0') + '/' +
+                                (date.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                                date.getFullYear();
+                        }
+
+
                         document.querySelector('#msgbox').innerHTML = html;
 
                         if (scrollToEnd) {

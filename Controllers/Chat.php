@@ -39,6 +39,7 @@ class Chat extends Controllers
     }
     public function getChatuser($idpersona)
     {
+        // $idpersona = 68;
         $iduser = $_SESSION['userData']['idpersona'];
         $arrData = $this->model->getMSQUsers($iduser, $idpersona);
 

@@ -19,7 +19,7 @@
                     <i class="fas fa-search"></i>
                   </span>
                 </div>
-                <div data-mdb-perfect-scrollbar="true" style="position: relative; height: 100%;">
+                <div data-mdb-perfect-scrollbar="true" style="position: relative; height: 100%;" >
                   <ul class="list-unstyled mb-0" style="max-height: 100%; height:390px; overflow-y: auto;">
                     <?php
                     for ($i = 0; $i < 100; $i++) {

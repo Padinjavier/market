@@ -7,7 +7,7 @@ define('BASE_URL', $link);
 date_default_timezone_set('America/Lima');
 //Datos de conexión a Base de Datos
 const DB_HOST = "localhost";
-const DB_NAME = "agencia";
+const DB_NAME = "market";
 const DB_USER = "root";
 const DB_PASSWORD = "javier20";
 const DB_CHARSET = "utf8";

@@ -78,6 +78,27 @@ class ChatModel extends Mysql
 
         return $request;
     }
+    // public function getMSQUsers(int $iduser, int $idpersona)
+    // {
+    //     $sql = "SELECT  p.idpersona,
+    //                     p.nombres, 
+    //                     p.apellidos, 
+    //                     p.email_user, 
+    //                     p.telefono, 
+    //                     m.msg_id, 
+    //                     m.input_msg_id, 
+    //                     m.output_msg_id, 
+    //                     m.msg,
+    //                     m.datecreated
+    //                 FROM persona p
+    //                 LEFT JOIN messages m ON (m.input_msg_id = {$idpersona} AND m.output_msg_id = {$iduser})
+    //                                     OR (m.input_msg_id = {$iduser} AND m.output_msg_id = {$idpersona})
+    //                 WHERE p.idpersona = {$idpersona} ORDER BY m.msg_id ASC;";
+
+    //     $request = $this->select_all($sql);
+
+    //     return $request;
+    // }
     public function getMSQUsers(int $iduser, int $idpersona)
     {
         $sql = "SELECT  p.idpersona,
@@ -88,17 +109,19 @@ class ChatModel extends Mysql
                         m.msg_id, 
                         m.input_msg_id, 
                         m.output_msg_id, 
-                        m.msg
+                        m.msg,
+                        m.datecreated
                     FROM persona p
                     LEFT JOIN messages m ON (m.input_msg_id = {$idpersona} AND m.output_msg_id = {$iduser})
                                         OR (m.input_msg_id = {$iduser} AND m.output_msg_id = {$idpersona})
-                    WHERE p.idpersona = {$idpersona} ORDER BY m.msg_id ASC;";
-
+                    WHERE p.idpersona = {$idpersona}
+                    ORDER BY m.datecreated ASC;";  // Ordenado por fecha de creación en orden ascendente
+    
         $request = $this->select_all($sql);
-
+    
         return $request;
     }
-
+    
     public function insertMSG(int $iduser, int $idpersona, string $msg)
     {
         $this->input_msg_id = $iduser;
