@@ -6,12 +6,15 @@
 <style>
   #nummsg{
     position: absolute;
-    color: red;
-    top: -6px;
-    right: -1px;
-    font-size: 20px;
+    color: #ffffff;
+    top: -8px;
+    right: -8px;
     font-weight: 900;
     text-shadow: 0px 0px 20px rgb(0 0 0);
+    background: red;
+    border-radius: 50px;
+    width: 50%;
+    height: 50%;
   }
 </style>
 <!-- chat panel  -->

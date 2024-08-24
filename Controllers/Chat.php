@@ -18,7 +18,6 @@ class Chat extends Controllers
         $data['page_title'] = "chat";
         $data['page_name'] = "chat";
         $data['page_functions_js'] = "functions_chats.js"; // Asegúrate de tener el archivo JS correspondiente
-        // $this->views->getModal('chat',$data);
         $this->views->getModal('modalChat', $data);
     }
 
@@ -37,12 +36,14 @@ class Chat extends Controllers
         echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         die();
     }
+
     public function getChatuser($idpersona)
     {
         // $idpersona = 68;
         $iduser = $_SESSION['userData']['idpersona'];
+        $arrData2 = $this->model->viewMSGUsers($iduser, $idpersona);
         $arrData = $this->model->getMSQUsers($iduser, $idpersona);
-
+        
         if (empty($arrData)) {
             $arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
         } else {
@@ -54,7 +55,7 @@ class Chat extends Controllers
     }
 
     public function setMSG()
-{
+    {
     $idpersona = $_POST['idpersona'];
     $msg = $_POST['msg'];
     $iduser = $_SESSION['userData']['idpersona'];
@@ -73,7 +74,7 @@ class Chat extends Controllers
 
     echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
     die();
-}
+    }
 
 
 }

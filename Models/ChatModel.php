@@ -60,7 +60,7 @@ class ChatModel extends Mysql
                             END AS other_person_id,
                             COUNT(*) AS unread_count
                         FROM messages
-                        WHERE view = 0 -- Mensajes no leídos
+                        WHERE view = 1 -- Mensajes no leídos
                         AND output_msg_id = {$iduser} -- Solo cuenta los mensajes enviados a la persona con id {$iduser}
                         GROUP BY CASE 
                                 WHEN input_msg_id = {$iduser} THEN output_msg_id
@@ -78,27 +78,7 @@ class ChatModel extends Mysql
 
         return $request;
     }
-    // public function getMSQUsers(int $iduser, int $idpersona)
-    // {
-    //     $sql = "SELECT  p.idpersona,
-    //                     p.nombres, 
-    //                     p.apellidos, 
-    //                     p.email_user, 
-    //                     p.telefono, 
-    //                     m.msg_id, 
-    //                     m.input_msg_id, 
-    //                     m.output_msg_id, 
-    //                     m.msg,
-    //                     m.datecreated
-    //                 FROM persona p
-    //                 LEFT JOIN messages m ON (m.input_msg_id = {$idpersona} AND m.output_msg_id = {$iduser})
-    //                                     OR (m.input_msg_id = {$iduser} AND m.output_msg_id = {$idpersona})
-    //                 WHERE p.idpersona = {$idpersona} ORDER BY m.msg_id ASC;";
 
-    //     $request = $this->select_all($sql);
-
-    //     return $request;
-    // }
     public function getMSQUsers(int $iduser, int $idpersona)
     {
         $sql = "SELECT  p.idpersona,
@@ -121,6 +101,20 @@ class ChatModel extends Mysql
     
         return $request;
     }
+    public function viewMSGUsers(int $iduser, int $idpersona)
+    {
+    $sql = "UPDATE messages 
+            SET view = 0 
+            WHERE input_msg_id = ? 
+            AND output_msg_id = ? 
+            AND view = 1";  // Solo actualizar si el mensaje no ha sido visto
+    
+    $arrData = array($idpersona, $iduser);
+    $request = $this->update($sql, $arrData);
+    
+    return $request;
+    }
+
     
     public function insertMSG(int $iduser, int $idpersona, string $msg)
     {

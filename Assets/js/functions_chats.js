@@ -21,11 +21,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.documentElement.style.overflow = "hidden";
             chatIcon.classList.remove("fa-comment");
             chatIcon.classList.add("bi", "bi-x-lg");
+            document.getElementById("nummsg").classList.add('d-none');
+            
         } else {
             chatPanel.style.display = "none";
             document.documentElement.style.overflow = "";
             chatIcon.classList.remove("bi", "bi-x-lg");
             chatIcon.classList.add("fas", "fa-comment");
+            document.getElementById("nummsg").classList.remove('d-none');
             resetChatList();
         }
     }
@@ -40,6 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
         users.forEach(user => {
             let unreadCount = user.unread_count || 0;
             totalmsg= totalmsg + unreadCount;
+
+            let spanunreadCount=(unreadCount != "0") ?
+            `<span id="unreadBadge" class="badge bg-danger rounded-pill float-end text-white">${unreadCount}</span>` :
+            ``;
+
             let conect = (user.conexion === "0" || user.conexion === null) ?
                 `<span class='text-danger'>inactivo</span>` :
                 `<span class='text-info'>activo</span>`;
@@ -65,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                             <div class="pt-1 d-flex flex-column align-items-end">
                                 ${lastConnection}
-                                <span class="badge bg-danger rounded-pill float-end text-white">${unreadCount}</span>
+                                ${spanunreadCount}
                             </div>
                         </a>
                     </li>`;
@@ -170,6 +178,7 @@ function openChat(idpersona) {
         request.send();
         request.onreadystatechange = function () {
             if (request.readyState == 4 && request.status == 200) {
+                console.log(request.responseText);
                 let objData = JSON.parse(request.responseText);
                 if (objData.status) {
                     let currentData = JSON.stringify(objData.data); // Convertir los datos actuales a string JSON
