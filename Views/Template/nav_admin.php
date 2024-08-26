@@ -115,6 +115,18 @@
                         <li><a class="treeview-item pl-5" href="<?= base_url(); ?>/servicios">
                                 Servicios</a></li>
                     <?php } ?>
+        <!-- productos  -->
+
+                    <?php if (!empty($_SESSION['permisos'][14]['r'])) { ?>
+                        <li><a class="treeview-item pl-5" href="<?= base_url(); ?>/productos">
+                                Productos</a></li>
+                    <?php } ?>
+        <!-- categoria  -->
+
+                    <?php if (!empty($_SESSION['permisos'][15]['r'])) { ?>
+                        <li><a class="treeview-item pl-5" href="<?= base_url(); ?>/categorias">
+                                Categorias</a></li>
+                    <?php } ?>
                 </ul>
             </li>
         <?php } ?>

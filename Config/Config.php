@@ -88,6 +88,8 @@ const MDOPCIONES = 10;
 const MDPAGINAS = 11;
 const MDCONTACTOS = 12;
 const MDSUSCRIPCIONES = 13;
+const MPRODUCTOS = 14;
+const MCATEGORIAS = 15;
 
 //Páginas
 const PINICIO = 1;
