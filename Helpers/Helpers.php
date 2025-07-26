@@ -316,7 +316,7 @@
         return $request;
     }
 
-    function CurlConnectionGet(string $ruta, string $contentType = null, string $token){
+    function CurlConnectionGet(string $ruta, ?string $contentType = null, string $token){
         $content_type = $contentType != null ? $contentType : "application/x-www-form-urlencoded";
         if($token != null){
             $arrHeader = array('Content-Type:'.$content_type,
@@ -340,7 +340,7 @@
         return $request;
     }
 
-    function CurlConnectionPost(string $ruta, string $contentType = null, string $token){
+    function CurlConnectionPost(string $ruta, ?string $contentType = null, string $token){
         $content_type = $contentType != null ? $contentType : "application/x-www-form-urlencoded";
         if($token != null){
             $arrHeader = array('Content-Type:'.$content_type,
